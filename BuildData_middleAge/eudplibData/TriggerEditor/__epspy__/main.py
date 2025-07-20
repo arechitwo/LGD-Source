@@ -4,6 +4,8 @@ from eudplib.core.eudfunc import EUDTraceLog, EUDTracedFunc, EUDTracedTypedFunc,
 from eudplib.epscript.helper import _RELIMP, _TYGV, _TYSV, _TYLV, _CGFW, _ARR, _VARR, _SRET, _SV, _ATTW, _ARRW, _ATTC, _ARRC, _L2V, _LSH, _ALL
 # (Line 1) import PluginVariables as msqcvar;
 import PluginVariables as msqcvar
+# (Line 3) import Systems.map_manager as mmgr;
+from Systems import map_manager as mmgr
 # (Line 5) var addr, ptrAddr, patternAddr, num;
 addr, ptrAddr, patternAddr, num = EUDCreateVariables(4)
 # (Line 6) var pChat;//, chat
