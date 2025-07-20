@@ -1,0 +1,83 @@
+[main]
+input: ..\..\baseMage.scx
+output: ..\..\[EUD]middleAge.scx
+
+[DataEditor.py]
+[ExtraDataEditor.py]
+[dataDumper]
+..\temp\custom_txt.tbl : 0x6D5A30, copy
+
+[chatEvent]
+__addr__ : addr
+__ptrAddr__: ptrAddr
+__patternAddr__: patternAddr
+^자금 빨강.*.*$ : 1
+^자금 파랑.*.*$ : 2
+^자금 연두.*.*$ : 3
+^자금 보라.*.*$ : 4
+^자금 주황.*.*$ : 5
+^자금 갈색.*.*$ : 6
+^자금 하양.*.*$ : 7
+군사 빨강 : 65
+군사 파랑 : 66
+군사 연두 : 67
+군사 보라 : 68
+군사 주황 : 69
+군사 갈색 : 70
+군사 하양 : 71
+빨강을 파문한다 : 72
+파랑을 파문한다 : 73
+초록을 파문한다 : 74
+보라를 파문한다 : 75
+주황을 파문한다 : 76
+갈색을 파문한다 : 77
+하양을 파문한다 : 78
+영토 빨강 : 23
+영토 파랑 : 24
+영토 연두 : 25
+영토 보라 : 26
+영토 주황 : 27
+영토 갈색 : 28
+영토 하양 : 29
+고려 : 8
+폐쇄 : 9
+거란 : 10
+몽골 : 11
+탕구트 : 12
+토번 : 13
+대송 : 14
+오월 : 15
+호남 : 16
+파촉 : 17
+양광 : 18
+대리 : 19
+대월 : 20
+폐쇄2 : 21
+폐쇄3 : 30
+랜덤 : 31
+임시정부생성 : 22
+예비 : 36
+예비2 : 37
+gg : 38
+[TriggerEditor\main.eps]
+
+[MSQC]
+mouse : mouse1
+KeyPress(F) : 215, 255
+KeyDown(1) : 215, 1
+KeyDown(2) : 215, 2
+KeyDown(3) : 215, 3
+KeyDown(4) : 215, 4
+MouseDown(L) : 214, 255
+MouseDown(R) : 214, 256
+MouseDown(M) : 214, 257
+DELETE : 214, 259
+INSERT : 214, 260
+F1 : 214, 254
+END : 214, 253
+patternAddr; xy, num, pChat: nums_, patternAction_
+addr;val, addr:chatAction_
+
+
+[eudTurbo]
+

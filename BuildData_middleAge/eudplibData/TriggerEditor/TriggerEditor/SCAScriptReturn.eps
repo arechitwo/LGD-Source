@@ -1,0 +1,298 @@
+import SCAFlexible as scf;
+// todo: Use Object Pool;
+
+py_exec("\n\
+def f_mersenne_gte(x):\n\
+    if x <= 1:\n\
+        return 1\n\
+    temp = 1\n\
+    while temp - 1 < x:\n\
+        temp *= 2\n\
+    return temp - 1\n\
+");
+const mersenne_gte = py_eval("f_mersenne_gte");
+
+const ArrayobjectN = 5000;
+const Arraysize = 1000;
+const ArrayMask = mersenne_gte(Arraysize);
+const Arraybuffer = EUDVArray(ArrayobjectN, EUDArray)(py_eval("lambda x, y: [EUDArray(x) for _ in range(y)]")(Arraysize, ArrayobjectN));
+var Arrayremaining = ArrayobjectN;
+function ArrayAlloc(): EUDArray {
+    Arrayremaining -= 1;
+    return Arraybuffer[Arrayremaining];
+}
+function ArrayFree(arrEPD) {
+    Arraybuffer[Arrayremaining] = arrEPD;
+    Arrayremaining += 1;
+}
+
+const MiniArrayobjectN = 100;
+const MiniArraysize = 10;
+const MiniArrayMask = mersenne_gte(MiniArraysize);
+const MiniArraybuffer = EUDVArray(MiniArrayobjectN, EUDArray)(py_eval("lambda x, y: [EUDArray(x) for _ in range(y)]")(MiniArraysize, MiniArrayobjectN));
+var MiniArrayremaining  = MiniArrayobjectN;
+function MiniArrayAlloc(): EUDArray {
+    MiniArrayremaining -= 1;
+    return MiniArraybuffer[MiniArrayremaining];
+}
+
+function MiniArrayFree(arrEPD) {
+    MiniArraybuffer[MiniArrayremaining] = arrEPD;
+    MiniArrayremaining += 1;
+}
+
+object SCAReturnString {
+    var values: EUDArray;
+    var length;
+
+    function constructor(length) {
+        this.values = ArrayAlloc();
+        this.length = length;
+    }
+
+    function destructor() {
+        foreach(i: EUDLoopRange(this.length)) {
+            dwwrite_epd(this.values + i, 0); // 할당된 값을 0으로 바꾼다.
+        }
+        ArrayFree(this.values);
+    }
+};
+
+object SCAReturnArray {
+    var values: EUDArray;
+    var types: EUDArray;
+    var length;
+
+    function constructor(length) {
+        this.values = ArrayAlloc();
+        this.types = ArrayAlloc();
+        this.length = length;
+    }
+
+    function destructor() {
+        foreach(i: EUDLoopRange(this.length)) {
+            const values, types = this.values + i, this.types + i;
+            if (MemoryXEPD(types, Exactly, 2, mersenne_gte(3))) {
+                SCAReturnString.free(dwread_epd(values));
+            }
+            DoActions(SetMemoryEPD(values, SetTo, 0), SetMemoryEPD(types, SetTo, 0));  // 할당된 값을 0으로 바꾼다.
+        }
+        ArrayFree(this.values);
+        ArrayFree(this.types);
+    }
+};
+
+object SCAReturn {
+    //리턴을 여러개 받을 수 있음.
+    //리턴을 받으면 값 삭제.
+    
+    var values: EUDArray;
+    var types: EUDArray;
+    var returnindex;
+    var returncount;
+    var lastepd;
+
+    function constructor(epd) {
+        this.values = MiniArrayAlloc();
+        this.types = MiniArrayAlloc();
+        const AdvanceEPD = function() {
+            SetVariables(epd, 1, Add);
+            Trigger(epd.AtLeast(scf.FuncLength), epd.SetNumber(0));
+        };
+
+        this.returnindex = maskread_epd(scf.FuncReturnTableEPD + epd, mersenne_gte(100)); // 배열 길이, 최대 100 (0 ~ 127)
+        AdvanceEPD();
+
+        // 시작 리턴 배열
+        AdvanceEPD();
+
+        this.returncount = maskread_epd(scf.FuncReturnTableEPD + epd, MiniArrayMask); // 리턴 길이, 최대 10 (0 ~ 15)
+        AdvanceEPD();
+
+        foreach(i: EUDLoopRange(this.returncount)){
+            const values, types = this.values + i, this.types + i;
+            epdswitch(scf.FuncReturnTableEPD + epd, mersenne_gte(3)){ // 변수 종류, 최대 3
+                case 1: { //Number = 1
+                    AdvanceEPD();
+
+                    repmovsd_epd(values, scf.FuncReturnTableEPD + epd, 1); // 값을 (4 * 1)bytes 만큼 복사한다.
+                    SetMemoryEPD(types, SetTo, 1);
+                    AdvanceEPD();
+                    break;
+                }
+                case 2: { //String = 2
+                    AdvanceEPD();
+                    const length = maskread_epd(scf.FuncReturnTableEPD + epd, ArrayMask); // 문자열 길이, 최대 1000 (0 ~ 1023)
+                    AdvanceEPD();
+
+                    const str = SCAReturnString.alloc(length);
+                    repmovsd_epd(str.values, scf.FuncReturnTableEPD + epd, length); // 값을 (4 * length)bytes 만큼 복사한다.
+
+                    foreach(_: EUDLoopRange(length)){
+                        AdvanceEPD();
+                    }
+                    DoActions(SetMemoryEPD(values, SetTo, str), SetMemoryEPD(types, SetTo, 2));
+                    break;
+                }
+                case 3: { //Array = 3
+                    AdvanceEPD();
+                    
+                    const length = maskread_epd(scf.FuncReturnTableEPD + epd, ArrayMask); // 배열 길이, 최대 1000 (0 ~ 1023)
+                    AdvanceEPD();
+
+                    const arr = SCAReturnArray.alloc(length);
+                    foreach(ai: EUDLoopRange(length)) {
+                        const arr_values, arr_types = arr.values + ai, arr.types + ai;
+                        epdswitch(scf.FuncReturnTableEPD + epd, mersenne_gte(3)){  // 변수 종류, 최대 3
+                            case 1: { //Number = 1
+                                AdvanceEPD();
+
+                                repmovsd_epd(arr_values, scf.FuncReturnTableEPD + epd, 1); // 값을 (4 * 1)bytes 만큼 복사한다.
+                                SetMemoryEPD(arr_types, SetTo, 1);
+                                AdvanceEPD();
+                                break; 
+                            }
+                            case 2: { //String = 2
+                                AdvanceEPD();
+
+                                const length = maskread_epd(scf.FuncReturnTableEPD + epd, ArrayMask); // 문자열 길이, 최대 1000 (0 ~ 1023)
+                                AdvanceEPD();
+
+                                const str = SCAReturnString.alloc(length);
+                                repmovsd_epd(str.values, scf.FuncReturnTableEPD + epd, length); // 값을 (4 * length)bytes 만큼 복사한다.
+
+                                foreach(_: EUDLoopRange(length)){
+                                    AdvanceEPD();
+                                }
+                                DoActions(SetMemoryEPD(arr_values, SetTo, str), SetMemoryEPD(arr_types, SetTo, 2));
+                                break;
+                            }
+                            case 3: { //Array = 3
+                                //이런 경우는 없음
+                                AdvanceEPD();
+                                break;
+                            }
+                            default: {
+                                AdvanceEPD();
+                                break;
+                            }
+                        }
+                    }
+                    DoActions(SetMemoryEPD(values, SetTo, arr), SetMemoryEPD(types, SetTo, 3));
+                    break;
+                }
+                default: {
+                    AdvanceEPD();
+                    break;
+                }
+            }
+        }
+        this.lastepd = epd;
+    }
+
+    function destructor() {
+        foreach(i: EUDLoopRange(this.returncount)){
+            const values, types = this.values + i, this.types + i;
+            epdswitch(types, mersenne_gte(3)) {
+                case 2: {
+                    SCAReturnString.free(dwread_epd(values));
+                    break;
+                }
+                case 3: {
+                    SCAReturnArray.free(dwread_epd(values));
+                    break;
+                }
+            }
+            DoActions(SetMemoryEPD(values, SetTo, 0), SetMemoryEPD(types, SetTo, 0));
+        }
+        MiniArrayFree(this.values);
+        MiniArrayFree(this.types);
+    }
+
+    function fmt(buffer: StringBuffer): StringBuffer {
+        buffer.insert(0, "[");
+        foreach(i: EUDLoopRange(this.returncount)){
+            const values, types = this.values + i, this.types + i;
+            if (i > 0) {
+                buffer.append(", ");
+            }
+            epdswitch(types, mersenne_gte(3)){ // 변수 종류, 최대 3
+                case 1: { //Number = 1
+                    buffer.appendf("{}", dwread_epd(values));
+                    break;
+                }
+                case 2: { //String = 2
+                    const str = SCAReturnString.cast(dwread_epd(values));
+                    buffer.appendf("\"{:t}\"", str.values);
+                    break;
+                }
+                case 3: { //Array = 3
+                    const arr = SCAReturnArray.cast(dwread_epd(values));
+                    buffer.appendf("[");
+                    foreach(ai: EUDLoopRange(arr.length)) {
+                        const arr_values, arr_types = arr.values + ai, arr.types + ai;
+                        if (ai > 0) {
+                            buffer.appendf(", ");
+                        }
+                        epdswitch(arr_types, mersenne_gte(3)){  // 변수 종류, 최대 3
+                            case 1: { //Number = 1
+                                buffer.appendf("{}", dwread_epd(arr_values));
+                                break; 
+                            }
+                            case 2: { //String = 2
+                                const str = SCAReturnString.cast(dwread_epd(arr_values));
+                                buffer.appendf("\"{:t}\"", str.values);
+                                break;
+                            }
+                        }
+                    }
+                    buffer.append("]");
+                    break;
+                }
+            }
+        }
+        buffer.append("]");
+        return buffer;
+    }
+};
+
+const ReturnSize = 100;
+const returnarray = (SCAReturn * ReturnSize)();
+
+//리턴 값 초기화
+function ResetReturnObject(rindex){
+    const temp = returnarray[rindex];
+    if(temp){
+        //값이 존재하므로 free해준다.
+        SCAReturn.free(temp);
+        returnarray[rindex] = 0;
+    }
+}
+
+var lastepd = 0;
+
+//리턴 값 처리기
+function Exec(){
+    if(!MemoryEPD(scf.FuncCommandEPD + 1, Exactly, lastepd)){
+        const rtoken = SCAReturn.alloc(lastepd);
+        const rindex = rtoken.returnindex;
+
+        ResetReturnObject(rindex);
+        returnarray[rindex] = rtoken;
+
+        lastepd = rtoken.lastepd;
+    }
+}
+
+//리턴 성공 했는지 판단
+function IsReturn(rindex){
+    if(returnarray[rindex]){
+        return true;
+    }else{
+        return false;
+    }
+    
+}
+
+//리턴 오브젝트 반환
+const GetReturnObject = py_eval("lambda x: returnarray[x]");
