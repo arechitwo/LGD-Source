@@ -1,0 +1,116 @@
+/**
+ * Sets the minimap color of a specified player.
+ *
+ * @param {number} Player - The player whose color will be changed.
+ * @param {number} Color - The color value to set (range: 0~255).
+ * @example
+ * SetPColor(7, 40); // Sets player 7's color to 40
+ */
+function SetPColor(Player : TrgPlayer, Color) {
+    
+    DoActions(Player.AddNumber(0x581DD6));
+    bwrite(Player, Color);
+    //   2 × Player + EPD(0x581D76) = Minimap Color EPD
+    // = 2 ×(Player + 0x581DD6) + 0x3F4F_A2D8
+    // = 2×((Player + 0x581DD6) + 0x1FA7_D16C)
+    VProc(Player, list(
+    Player.AddNumber(0x1FA7D16C),
+    Player.QueueAddTo(Player),
+    ));
+    bwrite_epd(Player, 2, Color);
+}
+
+function setSelectedCityName(){
+
+    const landUnit = $U("공작령 지방권력의 중심");
+    // 유닛 인덱스 : '이름'
+    const nameMap = py_eval("{\
+    0: '\x16둡린 \x0E(Dubh Linn)',\
+    1: '\x16단치히 \x0E(Danzig)',\
+    2: '\x16함부르크 \x0E(Hamburg)',\
+    3: '\x16론디니움 \x0E(Londinium)',\
+    4: '\x16민스크 \x0E(Minsk)',\
+    5: '\x16베를린 \x0E(Berlin)',\
+    6: '\x16브레슬라우 \x0E(Breslau)',\
+    7: '\x16루테시아 \x0E(Lutetia)',\
+    8: '\x16크라쿠프 \x0E(Krakow)',\
+    9: '\x16프라하 \x0E(Prague)',\
+    10: '\x16남네투스 \x0E(Namnetus)',\
+    11: '\x16카샤 \x0E(Kassa)',\
+    12: '\x16베른 \x0E(Bern)',\
+    13: '\x16클라우젠부르크 \x0E(Klausenburg)',\
+    14: '\x16부다 \x0E(Buda)',\
+    15: '\x16마헤리트 \x0E(Majerit)',\
+    16: '\x16발렌시야 \x0E(Balansiya)',\
+    17: '\x16로마 \x0E(Rome)',\
+    18: '\x16티르칸 \x0E(Tirkan)',\
+    19: '\x16테살로니케 \x0E(Thessalonike)',\
+    20: '\x16올비아 \x0E(Olbia)',\
+    21: '\x16바리 \x0E(Bari)',\
+    }");
+
+
+    const nameStr = $T("제일긴땅이름보다길게제일긴땅이름보다길게제일긴땅이름보다길게");
+    var namePtr;
+    once {
+    namePtr = GetMapStringAddr(nameStr);
+    wwrite(0x660260 + 2*landUnit, nameStr);
+    }
+    
+    var select;
+    if (Memory(0x6284B8, Exactly, select)) return;
+    select = cunitread_epd(EPD(0x6284B8));
+    
+    var newName;
+    EUDSwitch(select);
+    foreach(index, name : nameMap.items()) {
+    const ptr = py_eval("0x59CCA8 if index == 0 else 0x59CCA8 + 336 * (1700 - index)");
+    EUDSwitchCase()(ptr);
+    newName = EPD(Db(name));
+    break;
+    }
+    EUDEndSwitch();
+    sprintf(namePtr, "{:t}", newName);
+}
+
+function sharedVision(){
+    setcurpl(7);
+    SetAllianceStatus((18), (0));
+    RunAIScript("Turn ON Shared Vision for Player 7");
+    RunAIScript("Turn ON Shared Vision for Player 6");
+    RunAIScript("Turn ON Shared Vision for Player 5");
+    RunAIScript("Turn ON Shared Vision for Player 4");
+    RunAIScript("Turn ON Shared Vision for Player 3");
+    RunAIScript("Turn ON Shared Vision for Player 2");
+    RunAIScript("Turn ON Shared Vision for Player 1");
+    RunAIScript("Turn ON Shared Vision for Player 1");
+}
+
+function setDamageRatio(){
+    //Explosive damage (폭발형) 공성무기
+    SetMemory(0x515BA0, SetTo, 128); //소형 방어
+    SetMemory(0x515BA4, SetTo, 128); //원거리 유닛 방어
+    SetMemory(0x515BA8, SetTo, 256); //건물
+    //Concussive damage (진동형) 기병 무기
+    SetMemory(0x515BB4, SetTo, 180); //소형 방어
+    SetMemory(0x515BB8, SetTo, 256); //원거리 유닛 방어
+    SetMemory(0x515BBC, SetTo, 64);  //건물
+    //Normal damage (일반형) 일반무기
+    SetMemory(0x515BC8, SetTo, 256); //소형 방어
+    SetMemory(0x515BCC, SetTo, 256); //원거리 유닛 방어
+    SetMemory(0x515BD0, SetTo,  64); //건물
+}
+
+function init(){
+    sharedVision();
+    // Attack Ratio
+    setDamageRatio();
+    // Set minimap color for player 7
+    SetPColor(7, 40);
+
+    CreateUnit(1, 2, "test", 0);
+ }
+
+function mainLoop(){
+    setSelectedCityName();
+}

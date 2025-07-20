@@ -2,3 +2,127 @@
 from eudplib import *
 from eudplib.core.eudfunc import EUDTraceLog, EUDTracedFunc, EUDTracedTypedFunc, EUDTracedMethod, EUDTracedTypedMethod
 from eudplib.epscript.helper import _RELIMP, _TYGV, _TYSV, _TYLV, _CGFW, _ARR, _VARR, _SRET, _SV, _ATTW, _ARRW, _ATTC, _ARRC, _L2V, _LSH, _ALL
+# (Line 9) function SetPColor(Player : TrgPlayer, Color) {
+@EUDTypedFunc([TrgPlayer, None])
+def SetPColor(Player, Color):
+    # (Line 11) DoActions(Player.AddNumber(0x581DD6));
+    DoActions(Player.AddNumber(0x581DD6))
+    # (Line 12) bwrite(Player, Color);
+    f_bwrite(Player, Color)
+    # (Line 16) VProc(Player, list(
+    # (Line 17) Player.AddNumber(0x1FA7D16C),
+    # (Line 18) Player.QueueAddTo(Player),
+    # (Line 19) ));
+    VProc(Player, FlattenList([Player.AddNumber(0x1FA7D16C), Player.QueueAddTo(Player)]))
+    # (Line 20) bwrite_epd(Player, 2, Color);
+    f_bwrite_epd(Player, 2, Color)
+    # (Line 21) }
+    # (Line 23) function setSelectedCityName(){
+
+@EUDFunc
+def f_setSelectedCityName():
+    # (Line 25) const landUnit = $U("공작령 지방권력의 중심");
+    landUnit = EncodeUnit("공작령 지방권력의 중심")
+    # (Line 27) const nameMap = py_eval("{\
+    # (Line 50) }");
+    nameMap = eval("{    0: '\x16둡린 \x0E(Dubh Linn)',    1: '\x16단치히 \x0E(Danzig)',    2: '\x16함부르크 \x0E(Hamburg)',    3: '\x16론디니움 \x0E(Londinium)',    4: '\x16민스크 \x0E(Minsk)',    5: '\x16베를린 \x0E(Berlin)',    6: '\x16브레슬라우 \x0E(Breslau)',    7: '\x16루테시아 \x0E(Lutetia)',    8: '\x16크라쿠프 \x0E(Krakow)',    9: '\x16프라하 \x0E(Prague)',    10: '\x16남네투스 \x0E(Namnetus)',    11: '\x16카샤 \x0E(Kassa)',    12: '\x16베른 \x0E(Bern)',    13: '\x16클라우젠부르크 \x0E(Klausenburg)',    14: '\x16부다 \x0E(Buda)',    15: '\x16마헤리트 \x0E(Majerit)',    16: '\x16발렌시야 \x0E(Balansiya)',    17: '\x16로마 \x0E(Rome)',    18: '\x16티르칸 \x0E(Tirkan)',    19: '\x16테살로니케 \x0E(Thessalonike)',    20: '\x16올비아 \x0E(Olbia)',    21: '\x16바리 \x0E(Bari)',    }")
+    # (Line 53) const nameStr = $T("제일긴땅이름보다길게제일긴땅이름보다길게제일긴땅이름보다길게");
+    nameStr = GetStringIndex("제일긴땅이름보다길게제일긴땅이름보다길게제일긴땅이름보다길게")
+    # (Line 54) var namePtr;
+    namePtr = EUDVariable()
+    # (Line 55) once {
+    _t1 = EUDExecuteOnce()
+    if _t1():
+        # (Line 56) namePtr = GetMapStringAddr(nameStr);
+        namePtr << (GetMapStringAddr(nameStr))
+        # (Line 57) wwrite(0x660260 + 2*landUnit, nameStr);
+        f_wwrite(0x660260 + 2 * landUnit, nameStr)
+        # (Line 58) }
+        # (Line 60) var select;
+    EUDEndExecuteOnce()
+    select = EUDVariable()
+    # (Line 61) if (Memory(0x6284B8, Exactly, select)) return;
+    if EUDIf()(Memory(0x6284B8, Exactly, select)):
+        EUDReturn()
+        # (Line 62) select = cunitread_epd(EPD(0x6284B8));
+    EUDEndIf()
+    select << (f_cunitread_epd(EPD(0x6284B8)))
+    # (Line 64) var newName;
+    newName = EUDVariable()
+    # (Line 65) EUDSwitch(select);
+    EUDSwitch(select)
+    # (Line 66) foreach(index, name : nameMap.items()) {
+    for index, name in nameMap.items():
+        # (Line 67) const ptr = py_eval("0x59CCA8 if index == 0 else 0x59CCA8 + 336 * (1700 - index)");
+        ptr = eval("0x59CCA8 if index == 0 else 0x59CCA8 + 336 * (1700 - index)")
+        # (Line 68) EUDSwitchCase()(ptr);
+        EUDSwitchCase()(ptr)
+        # (Line 69) newName = EPD(Db(name));
+        newName << (EPD(Db(name)))
+        # (Line 70) break;
+        EUDBreak()
+        # (Line 71) }
+        # (Line 72) EUDEndSwitch();
+
+    EUDEndSwitch()
+    # (Line 73) sprintf(namePtr, "{:t}", newName);
+    f_sprintf(namePtr, "{:t}", newName)
+    # (Line 74) }
+    # (Line 76) function sharedVision(){
+
+@EUDFunc
+def f_sharedVision():
+    # (Line 77) setcurpl(7);
+    f_setcurpl(7)
+    # (Line 78) SetAllianceStatus((18), (0));
+    # (Line 79) RunAIScript("Turn ON Shared Vision for Player 7");
+    DoActions(SetAllianceStatus((18), (0)))
+    # (Line 80) RunAIScript("Turn ON Shared Vision for Player 6");
+    DoActions(RunAIScript("Turn ON Shared Vision for Player 7"))
+    # (Line 81) RunAIScript("Turn ON Shared Vision for Player 5");
+    DoActions(RunAIScript("Turn ON Shared Vision for Player 6"))
+    # (Line 82) RunAIScript("Turn ON Shared Vision for Player 4");
+    DoActions(RunAIScript("Turn ON Shared Vision for Player 5"))
+    # (Line 83) RunAIScript("Turn ON Shared Vision for Player 3");
+    DoActions(RunAIScript("Turn ON Shared Vision for Player 4"))
+    # (Line 84) RunAIScript("Turn ON Shared Vision for Player 2");
+    DoActions(RunAIScript("Turn ON Shared Vision for Player 3"))
+    # (Line 85) RunAIScript("Turn ON Shared Vision for Player 1");
+    DoActions(RunAIScript("Turn ON Shared Vision for Player 2"))
+    # (Line 86) RunAIScript("Turn ON Shared Vision for Player 1");
+    DoActions(RunAIScript("Turn ON Shared Vision for Player 1"))
+    # (Line 87) }
+    DoActions(RunAIScript("Turn ON Shared Vision for Player 1"))
+    # (Line 89) function setDamageRatio(){
+
+@EUDFunc
+def f_setDamageRatio():
+    # (Line 92) SetMemory(0x515BBC, 7, 102);
+    # (Line 93) SetMemory(0x515BB8, 7, 180);
+    DoActions(SetMemory(0x515BBC, 7, 102))
+    # (Line 96) SetMemory(0x515BA0, 7, 102);
+    DoActions(SetMemory(0x515BB8, 7, 180))
+    # (Line 97) SetMemory(0x515BA4, 7, 180);
+    DoActions(SetMemory(0x515BA0, 7, 102))
+    # (Line 98) }
+    DoActions(SetMemory(0x515BA4, 7, 180))
+    # (Line 100) function init(){
+
+@EUDFunc
+def f_init():
+    # (Line 101) sharedVision();
+    f_sharedVision()
+    # (Line 103) setDamageRatio();
+    f_setDamageRatio()
+    # (Line 105) SetPColor(7, 40);
+    SetPColor(7, 40)
+    # (Line 107) CreateUnit(1, 2, "test", 0);
+    # (Line 108) }
+    DoActions(CreateUnit(1, 2, "test", 0))
+    # (Line 110) function mainLoop(){
+
+@EUDFunc
+def f_mainLoop():
+    # (Line 111) setSelectedCityName();
+    f_setSelectedCityName()
+    # (Line 112) }

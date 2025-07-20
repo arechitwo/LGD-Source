@@ -48,28 +48,32 @@ def onPluginStart():
         DoActions(SetAllianceStatus((7), (0)))
         # (Line 32) }
         DoActions(RunAIScript("Turn ON Shared Vision for Player 8"))
-        # (Line 35) }
+        # (Line 33) mmgr.init();
 
-    # (Line 38) function beforeTriggerExec(){
+    mmgr.f_init()
+    # (Line 36) }
+    # (Line 39) function beforeTriggerExec(){
 
 @EUDFunc
 def beforeTriggerExec():
-    # (Line 43) if( patternAddr > 0 ){
+    # (Line 43) mmgr.mainLoop();
+    mmgr.f_mainLoop()
+    # (Line 44) if( patternAddr > 0 ){
     if EUDIf()(patternAddr <= 0, neg=True):
-        # (Line 44) num = parse(ptrAddr + pattern_len)[[0]];
+        # (Line 45) num = parse(ptrAddr + pattern_len)[[0]];
         num << (f_parse(ptrAddr + pattern_len)[0])
-        # (Line 45) pChat = patternAddr;
+        # (Line 46) pChat = patternAddr;
         pChat << (patternAddr)
-        # (Line 46) }
-        # (Line 48) CreateUnit(1, 42, 64, 7);
+        # (Line 47) }
+        # (Line 49) CreateUnit(1, 42, 64, 7);
     EUDEndIf()
-    # (Line 49) RemoveUnit(42, 7);
+    # (Line 50) RemoveUnit(42, 7);
     DoActions(CreateUnit(1, 42, 64, 7))
-    # (Line 50) }
+    # (Line 51) }
     DoActions(RemoveUnit(42, 7))
-    # (Line 52) function afterTriggerExec() {
+    # (Line 53) function afterTriggerExec() {
 
 @EUDFunc
 def afterTriggerExec():
-    # (Line 55) }
+    # (Line 56) }
     pass
