@@ -23,8 +23,6 @@ def onPluginStart():
         SetMemory(0x5194B0, SetTo, 4356240),
         SetMemory(0x519650, SetTo, 4346240),
         SetMemory(0x519654, SetTo, 4356240),
-        SetMemory(0x51989C, SetTo, 4344192),
-        SetMemory(0x5198A0, SetTo, 4353872),
         SetMemory(0x5199A4, SetTo, 4344192),
         SetMemory(0x5199A8, SetTo, 4353872),
         SetMemory(0x5199B0, SetTo, 4344192),

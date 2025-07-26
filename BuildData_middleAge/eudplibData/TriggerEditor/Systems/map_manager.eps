@@ -1,3 +1,8 @@
+const TERR_TIMER = 400;
+const TERR_LENGTH = 30;
+const checkTerrStage = EUDArray(TERR_LENGTH);
+const terrTimer      = EUDArray(TERR_LENGTH);
+
 /**
  * Sets the minimap color of a specified player.
  *
@@ -22,7 +27,7 @@ function SetPColor(Player : TrgPlayer, Color) {
 
 function setSelectedCityName(){
 
-    const landUnit = $U("공작령 지방권력의 중심");
+    const landUnit = $U("백작령 지방권력의 중심");
     // 유닛 인덱스 : '이름'
     const nameMap = py_eval("{\
     0: '\x16둡린 \x0E(Dubh Linn)',\
@@ -42,7 +47,6 @@ function setSelectedCityName(){
     14: '\x16부다 \x0E(Buda)',\
     15: '\x16마헤리트 \x0E(Majerit)',\
     16: '\x16발렌시야 \x0E(Balansiya)',\
-    17: '\x16로마 \x0E(Rome)',\
     18: '\x16티르칸 \x0E(Tirkan)',\
     19: '\x16테살로니케 \x0E(Thessalonike)',\
     20: '\x16올비아 \x0E(Olbia)',\
@@ -109,8 +113,86 @@ function init(){
     SetPColor(7, 40);
 
     CreateUnit(1, 2, "test", 0);
- }
+    GiveUnits(All, "(any unit)", 7,8,0);
+}
+
+function handleTerrPart0(i){
+    
+    //침공 선언
+    if(checkTerrStage[i] == 0 &&
+      Bring(13, 0, 1, 106, i) && 
+      Bring(26, 0, 1 , 230, i
+      )
+    ){
+        checkTerrStage[i] += 1;
+    }
+    
+    
+    //주둔군 생성
+    if(
+        checkTerrStage[i] == 1 &&
+        Bring(13, 0, 1, 106, i)
+    ){
+        checkTerrStage[i] += 1;
+        CreateUnit(10, 40, i, 13);
+        if(getcurpl() == 7){
+            ModifyUnitHitPoints(All, 40, 13, i, 50);
+        }
+    }
+
+    //계속 공격중
+    if(checkTerrStage[i] == 2 &&
+      Bring(13, 0, 1, 106, i) && 
+      Bring(26, 0, 1 , 230, i)
+      
+    ){
+        terrTimer[i] = TERR_TIMER;
+    }
+
+    //수비 성공
+    if(
+        checkTerrStage[i] == 2 &&
+        Bring(13, 0, 1, 106, i) &&
+        Bring(13, 0, 1, 230, i) &&
+        Bring(26, 10, 0, 230, i) &&
+        Bring(14, 10, 0, 230, i) &&
+        terrTimer[i] == 0
+    ){
+        RemoveUnitAt(All, 40, i, 13);
+        checkTerrStage[i] = 0;
+    }
+
+    //공격 성공
+    if(
+        checkTerrStage[i] == 2 &&
+        Bring(14, 0, 1, 106, i) &&
+        Bring(13, 0, 1, 230, i) &&
+        Bring(14, 10, 0, 230, i)
+    ){
+        GiveUnits(All, 106, 14, i, 13);
+        checkTerrStage[i] = 0;
+        terrTimer[i] = 0;
+    }
+    
+    if(terrTimer[i] > 0){
+        terrTimer[i] -= 1;
+    }
+}
+
+function handleTerrResoponse(){
+    for(var i = 8 ; i < 30 ; i++){
+        handleTerrPart0(i);
+    }
+}
+
+function playerLoop(){
+    foreach(cp : EUDLoopPlayer(None)){
+        setcurpl(cp);
+        handleTerrResoponse();
+    }
+}
 
 function mainLoop(){
     setSelectedCityName();
+    playerLoop();
 }
