@@ -1,8 +1,10 @@
+import .map_field as mf;
+
 const TERR_TIMER = 400;
 const TERR_LENGTH = 30;
 const checkTerrStage = EUDArray(TERR_LENGTH);
 const terrTimer      = EUDArray(TERR_LENGTH);
-
+const kingUnit = EUDVArray(8, CUnit)();
 /**
  * Sets the minimap color of a specified player.
  *
@@ -111,8 +113,17 @@ function init(){
     setDamageRatio();
     // Set minimap color for player 7
     SetPColor(7, 40);
+    mf.TilesetInit();
 
+    SetDeaths(EPD(0x584DE4), SetTo, 1, 128);
+    
+    setcurpl(0);
+    CenterView("test");
     CreateUnit(1, 2, "test", 0);
+    const tmp = CUnit.from_next();
+    CreateUnit(1, 74, "test", 0);
+    kingUnit[0] = tmp;
+    
     GiveUnits(All, "(any unit)", 7,8,0);
 }
 
@@ -185,6 +196,13 @@ function handleTerrResoponse(){
     }
 }
 
+function readTileInfo(epd){
+    const x,y = posread_epd(epd+0x28/4);
+    const x1,y1 = x >> 5, y >> 5;
+    const tileInfo = mf.tilesetInfo[y1*256+x1];
+    return tileInfo;
+}
+
 function playerLoop(){
     foreach(cp : EUDLoopPlayer(None)){
         setcurpl(cp);
@@ -194,5 +212,6 @@ function playerLoop(){
 
 function mainLoop(){
     setSelectedCityName();
+    //readTileInfo(epd);
     playerLoop();
 }

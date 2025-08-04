@@ -2,260 +2,294 @@
 from eudplib import *
 from eudplib.core.eudfunc import EUDTraceLog, EUDTracedFunc, EUDTracedTypedFunc, EUDTracedMethod, EUDTracedTypedMethod
 from eudplib.epscript.helper import _RELIMP, _TYGV, _TYSV, _TYLV, _CGFW, _ARR, _VARR, _SRET, _SV, _ATTW, _ARRW, _ATTC, _ARRC, _L2V, _LSH, _ALL
-# (Line 1) const TERR_TIMER = 400;
+# (Line 1) import .map_field as mf;
+# (Line 3) const TERR_TIMER = 400;
+try:
+    mf = _RELIMP(".", "map_field")
+except ImportError:
+    from . import map_field as mf
 TERR_TIMER = _CGFW(lambda: [400], 1)[0]
-# (Line 2) const TERR_LENGTH = 30;
+# (Line 4) const TERR_LENGTH = 30;
 TERR_LENGTH = _CGFW(lambda: [30], 1)[0]
-# (Line 3) const checkTerrStage = EUDArray(TERR_LENGTH);
+# (Line 5) const checkTerrStage = EUDArray(TERR_LENGTH);
 checkTerrStage = _CGFW(lambda: [EUDArray(TERR_LENGTH)], 1)[0]
-# (Line 4) const terrTimer      = EUDArray(TERR_LENGTH);
+# (Line 6) const terrTimer      = EUDArray(TERR_LENGTH);
 terrTimer = _CGFW(lambda: [EUDArray(TERR_LENGTH)], 1)[0]
-# (Line 14) function SetPColor(Player : TrgPlayer, Color) {
+# (Line 7) const kingUnit = EUDVArray(8, CUnit)();
+kingUnit = _CGFW(lambda: [EUDVArray(8, CUnit)()], 1)[0]
+# (Line 16) function SetPColor(Player : TrgPlayer, Color) {
 @EUDTypedFunc([TrgPlayer, None])
 def SetPColor(Player, Color):
-    # (Line 16) DoActions(Player.AddNumber(0x581DD6));
+    # (Line 18) DoActions(Player.AddNumber(0x581DD6));
     DoActions(Player.AddNumber(0x581DD6))
-    # (Line 17) bwrite(Player, Color);
+    # (Line 19) bwrite(Player, Color);
     f_bwrite(Player, Color)
-    # (Line 21) VProc(Player, list(
-    # (Line 22) Player.AddNumber(0x1FA7D16C),
-    # (Line 23) Player.QueueAddTo(Player),
-    # (Line 24) ));
+    # (Line 23) VProc(Player, list(
+    # (Line 24) Player.AddNumber(0x1FA7D16C),
+    # (Line 25) Player.QueueAddTo(Player),
+    # (Line 26) ));
     VProc(Player, FlattenList([Player.AddNumber(0x1FA7D16C), Player.QueueAddTo(Player)]))
-    # (Line 25) bwrite_epd(Player, 2, Color);
+    # (Line 27) bwrite_epd(Player, 2, Color);
     f_bwrite_epd(Player, 2, Color)
-    # (Line 26) }
-    # (Line 28) function setSelectedCityName(){
+    # (Line 28) }
+    # (Line 30) function setSelectedCityName(){
 
 @EUDFunc
 def f_setSelectedCityName():
-    # (Line 30) const landUnit = $U("백작령 지방권력의 중심");
+    # (Line 32) const landUnit = $U("백작령 지방권력의 중심");
     landUnit = EncodeUnit("백작령 지방권력의 중심")
-    # (Line 32) const nameMap = py_eval("{\
-    # (Line 54) }");
+    # (Line 34) const nameMap = py_eval("{\
+    # (Line 56) }");
     nameMap = eval("{    0: '\x16둡린 \x0E(Dubh Linn)',    1: '\x16단치히 \x0E(Danzig)',    2: '\x16함부르크 \x0E(Hamburg)',    3: '\x16론디니움 \x0E(Londinium)',    4: '\x16민스크 \x0E(Minsk)',    5: '\x16베를린 \x0E(Berlin)',    6: '\x16브레슬라우 \x0E(Breslau)',    7: '\x16루테시아 \x0E(Lutetia)',    8: '\x16크라쿠프 \x0E(Krakow)',    9: '\x16프라하 \x0E(Prague)',    10: '\x16남네투스 \x0E(Namnetus)',    11: '\x16카샤 \x0E(Kassa)',    12: '\x16베른 \x0E(Bern)',    13: '\x16클라우젠부르크 \x0E(Klausenburg)',    14: '\x16부다 \x0E(Buda)',    15: '\x16마헤리트 \x0E(Majerit)',    16: '\x16발렌시야 \x0E(Balansiya)',    18: '\x16티르칸 \x0E(Tirkan)',    19: '\x16테살로니케 \x0E(Thessalonike)',    20: '\x16올비아 \x0E(Olbia)',    21: '\x16바리 \x0E(Bari)',    }")
-    # (Line 57) const nameStr = $T("제일긴땅이름보다길게제일긴땅이름보다길게제일긴땅이름보다길게");
+    # (Line 59) const nameStr = $T("제일긴땅이름보다길게제일긴땅이름보다길게제일긴땅이름보다길게");
     nameStr = GetStringIndex("제일긴땅이름보다길게제일긴땅이름보다길게제일긴땅이름보다길게")
-    # (Line 58) var namePtr;
+    # (Line 60) var namePtr;
     namePtr = EUDVariable()
-    # (Line 59) once {
+    # (Line 61) once {
     _t1 = EUDExecuteOnce()
     if _t1():
-        # (Line 60) namePtr = GetMapStringAddr(nameStr);
+        # (Line 62) namePtr = GetMapStringAddr(nameStr);
         namePtr << (GetMapStringAddr(nameStr))
-        # (Line 61) wwrite(0x660260 + 2*landUnit, nameStr);
+        # (Line 63) wwrite(0x660260 + 2*landUnit, nameStr);
         f_wwrite(0x660260 + 2 * landUnit, nameStr)
-        # (Line 62) }
-        # (Line 64) var select;
+        # (Line 64) }
+        # (Line 66) var select;
     EUDEndExecuteOnce()
     select = EUDVariable()
-    # (Line 65) if (Memory(0x6284B8, Exactly, select)) return;
+    # (Line 67) if (Memory(0x6284B8, Exactly, select)) return;
     if EUDIf()(Memory(0x6284B8, Exactly, select)):
         EUDReturn()
-        # (Line 66) select = cunitread_epd(EPD(0x6284B8));
+        # (Line 68) select = cunitread_epd(EPD(0x6284B8));
     EUDEndIf()
     select << (f_cunitread_epd(EPD(0x6284B8)))
-    # (Line 68) var newName;
+    # (Line 70) var newName;
     newName = EUDVariable()
-    # (Line 69) EUDSwitch(select);
+    # (Line 71) EUDSwitch(select);
     EUDSwitch(select)
-    # (Line 70) foreach(index, name : nameMap.items()) {
+    # (Line 72) foreach(index, name : nameMap.items()) {
     for index, name in nameMap.items():
-        # (Line 71) const ptr = py_eval("0x59CCA8 if index == 0 else 0x59CCA8 + 336 * (1700 - index)");
+        # (Line 73) const ptr = py_eval("0x59CCA8 if index == 0 else 0x59CCA8 + 336 * (1700 - index)");
         ptr = eval("0x59CCA8 if index == 0 else 0x59CCA8 + 336 * (1700 - index)")
-        # (Line 72) EUDSwitchCase()(ptr);
+        # (Line 74) EUDSwitchCase()(ptr);
         EUDSwitchCase()(ptr)
-        # (Line 73) newName = EPD(Db(name));
+        # (Line 75) newName = EPD(Db(name));
         newName << (EPD(Db(name)))
-        # (Line 74) break;
+        # (Line 76) break;
         EUDBreak()
-        # (Line 75) }
-        # (Line 76) EUDEndSwitch();
+        # (Line 77) }
+        # (Line 78) EUDEndSwitch();
 
     EUDEndSwitch()
-    # (Line 77) sprintf(namePtr, "{:t}", newName);
+    # (Line 79) sprintf(namePtr, "{:t}", newName);
     f_sprintf(namePtr, "{:t}", newName)
-    # (Line 78) }
-    # (Line 80) function sharedVision(){
+    # (Line 80) }
+    # (Line 82) function sharedVision(){
 
 @EUDFunc
 def f_sharedVision():
-    # (Line 81) setcurpl(7);
+    # (Line 83) setcurpl(7);
     f_setcurpl(7)
-    # (Line 82) SetAllianceStatus((18), (0));
-    # (Line 83) RunAIScript("Turn ON Shared Vision for Player 7");
+    # (Line 84) SetAllianceStatus((18), (0));
+    # (Line 85) RunAIScript("Turn ON Shared Vision for Player 7");
     DoActions(SetAllianceStatus((18), (0)))
-    # (Line 84) RunAIScript("Turn ON Shared Vision for Player 6");
+    # (Line 86) RunAIScript("Turn ON Shared Vision for Player 6");
     DoActions(RunAIScript("Turn ON Shared Vision for Player 7"))
-    # (Line 85) RunAIScript("Turn ON Shared Vision for Player 5");
+    # (Line 87) RunAIScript("Turn ON Shared Vision for Player 5");
     DoActions(RunAIScript("Turn ON Shared Vision for Player 6"))
-    # (Line 86) RunAIScript("Turn ON Shared Vision for Player 4");
+    # (Line 88) RunAIScript("Turn ON Shared Vision for Player 4");
     DoActions(RunAIScript("Turn ON Shared Vision for Player 5"))
-    # (Line 87) RunAIScript("Turn ON Shared Vision for Player 3");
+    # (Line 89) RunAIScript("Turn ON Shared Vision for Player 3");
     DoActions(RunAIScript("Turn ON Shared Vision for Player 4"))
-    # (Line 88) RunAIScript("Turn ON Shared Vision for Player 2");
+    # (Line 90) RunAIScript("Turn ON Shared Vision for Player 2");
     DoActions(RunAIScript("Turn ON Shared Vision for Player 3"))
-    # (Line 89) RunAIScript("Turn ON Shared Vision for Player 1");
+    # (Line 91) RunAIScript("Turn ON Shared Vision for Player 1");
     DoActions(RunAIScript("Turn ON Shared Vision for Player 2"))
-    # (Line 90) RunAIScript("Turn ON Shared Vision for Player 1");
+    # (Line 92) RunAIScript("Turn ON Shared Vision for Player 1");
     DoActions(RunAIScript("Turn ON Shared Vision for Player 1"))
-    # (Line 91) }
+    # (Line 93) }
     DoActions(RunAIScript("Turn ON Shared Vision for Player 1"))
-    # (Line 93) function setDamageRatio(){
+    # (Line 95) function setDamageRatio(){
 
 @EUDFunc
 def f_setDamageRatio():
-    # (Line 95) SetMemory(0x515BA0, SetTo, 128); //소형 방어
-    # (Line 96) SetMemory(0x515BA4, SetTo, 128); //원거리 유닛 방어
+    # (Line 97) SetMemory(0x515BA0, SetTo, 128); //소형 방어
+    # (Line 98) SetMemory(0x515BA4, SetTo, 128); //원거리 유닛 방어
     DoActions(SetMemory(0x515BA0, SetTo, 128))
-    # (Line 97) SetMemory(0x515BA8, SetTo, 256); //건물
+    # (Line 99) SetMemory(0x515BA8, SetTo, 256); //건물
     DoActions(SetMemory(0x515BA4, SetTo, 128))
-    # (Line 99) SetMemory(0x515BB4, SetTo, 180); //소형 방어
+    # (Line 101) SetMemory(0x515BB4, SetTo, 180); //소형 방어
     DoActions(SetMemory(0x515BA8, SetTo, 256))
-    # (Line 100) SetMemory(0x515BB8, SetTo, 256); //원거리 유닛 방어
+    # (Line 102) SetMemory(0x515BB8, SetTo, 256); //원거리 유닛 방어
     DoActions(SetMemory(0x515BB4, SetTo, 180))
-    # (Line 101) SetMemory(0x515BBC, SetTo, 64);  //건물
+    # (Line 103) SetMemory(0x515BBC, SetTo, 64);  //건물
     DoActions(SetMemory(0x515BB8, SetTo, 256))
-    # (Line 103) SetMemory(0x515BC8, SetTo, 256); //소형 방어
+    # (Line 105) SetMemory(0x515BC8, SetTo, 256); //소형 방어
     DoActions(SetMemory(0x515BBC, SetTo, 64))
-    # (Line 104) SetMemory(0x515BCC, SetTo, 256); //원거리 유닛 방어
+    # (Line 106) SetMemory(0x515BCC, SetTo, 256); //원거리 유닛 방어
     DoActions(SetMemory(0x515BC8, SetTo, 256))
-    # (Line 105) SetMemory(0x515BD0, SetTo,  64); //건물
+    # (Line 107) SetMemory(0x515BD0, SetTo,  64); //건물
     DoActions(SetMemory(0x515BCC, SetTo, 256))
-    # (Line 106) }
+    # (Line 108) }
     DoActions(SetMemory(0x515BD0, SetTo, 64))
-    # (Line 108) function init(){
+    # (Line 110) function init(){
 
 @EUDFunc
 def f_init():
-    # (Line 109) sharedVision();
+    # (Line 111) sharedVision();
     f_sharedVision()
-    # (Line 111) setDamageRatio();
+    # (Line 113) setDamageRatio();
     f_setDamageRatio()
-    # (Line 113) SetPColor(7, 40);
+    # (Line 115) SetPColor(7, 40);
     SetPColor(7, 40)
-    # (Line 115) CreateUnit(1, 2, "test", 0);
-    # (Line 116) GiveUnits(All, "(any unit)", 7,8,0);
+    # (Line 116) mf.TilesetInit();
+    mf.TilesetInit()
+    # (Line 118) SetDeaths(EPD(0x584DE4), SetTo, 1, 128);
+    # (Line 120) setcurpl(0);
+    DoActions(SetDeaths(EPD(0x584DE4), SetTo, 1, 128))
+    f_setcurpl(0)
+    # (Line 121) CenterView("test");
+    # (Line 122) CreateUnit(1, 2, "test", 0);
+    DoActions(CenterView("test"))
+    # (Line 123) const tmp = CUnit.from_next();
     DoActions(CreateUnit(1, 2, "test", 0))
-    # (Line 117) }
+    tmp = CUnit.from_next()
+    # (Line 124) CreateUnit(1, 74, "test", 0);
+    # (Line 125) kingUnit[0] = tmp;
+    DoActions(CreateUnit(1, 74, "test", 0))
+    _ARRW(kingUnit, 0) << (tmp)
+    # (Line 127) GiveUnits(All, "(any unit)", 7,8,0);
+    # (Line 128) }
     DoActions(GiveUnits(All, "(any unit)", 7, 8, 0))
-    # (Line 119) function handleTerrPart0(i){
+    # (Line 130) function handleTerrPart0(i){
 
 @EUDFunc
 def f_handleTerrPart0(i):
-    # (Line 122) if(checkTerrStage[i] == 0 &&
+    # (Line 133) if(checkTerrStage[i] == 0 &&
     _t1 = EUDIf()
-    # (Line 123) Bring(13, 0, 1, 106, i) &&
-    # (Line 124) Bring(26, 0, 1 , 230, i
-    # (Line 125) )
-    # (Line 126) ){
+    # (Line 134) Bring(13, 0, 1, 106, i) &&
+    # (Line 135) Bring(26, 0, 1 , 230, i
+    # (Line 136) )
+    # (Line 137) ){
     if _t1(EUDSCAnd()(_ARRC(checkTerrStage, i) == 0)(Bring(13, 0, 1, 106, i))(Bring(26, 0, 1, 230, i))()):
-        # (Line 127) checkTerrStage[i] += 1;
+        # (Line 138) checkTerrStage[i] += 1;
         _ARRW(checkTerrStage, i).__iadd__(1)
-        # (Line 128) }
-        # (Line 132) if(
+        # (Line 139) }
+        # (Line 143) if(
     EUDEndIf()
     _t2 = EUDIf()
-    # (Line 133) checkTerrStage[i] == 1 &&
-    # (Line 134) Bring(13, 0, 1, 106, i)
-    # (Line 135) ){
+    # (Line 144) checkTerrStage[i] == 1 &&
+    # (Line 145) Bring(13, 0, 1, 106, i)
+    # (Line 146) ){
     if _t2(EUDSCAnd()(_ARRC(checkTerrStage, i) == 1)(Bring(13, 0, 1, 106, i))()):
-        # (Line 136) checkTerrStage[i] += 1;
+        # (Line 147) checkTerrStage[i] += 1;
         _ARRW(checkTerrStage, i).__iadd__(1)
-        # (Line 137) CreateUnit(10, 40, i, 13);
-        # (Line 138) if(getcurpl() == 7){
+        # (Line 148) CreateUnit(10, 40, i, 13);
+        # (Line 149) if(getcurpl() == 7){
         DoActions(CreateUnit(10, 40, i, 13))
         if EUDIf()(f_getcurpl() == 7):
-            # (Line 139) ModifyUnitHitPoints(All, 40, 13, i, 50);
-            # (Line 140) }
+            # (Line 150) ModifyUnitHitPoints(All, 40, 13, i, 50);
+            # (Line 151) }
             DoActions(ModifyUnitHitPoints(All, 40, 13, i, 50))
-            # (Line 141) }
+            # (Line 152) }
         EUDEndIf()
-        # (Line 144) if(checkTerrStage[i] == 2 &&
+        # (Line 155) if(checkTerrStage[i] == 2 &&
     EUDEndIf()
     _t4 = EUDIf()
-    # (Line 145) Bring(13, 0, 1, 106, i) &&
-    # (Line 146) Bring(26, 0, 1 , 230, i)
-    # (Line 148) ){
+    # (Line 156) Bring(13, 0, 1, 106, i) &&
+    # (Line 157) Bring(26, 0, 1 , 230, i)
+    # (Line 159) ){
     if _t4(EUDSCAnd()(_ARRC(checkTerrStage, i) == 2)(Bring(13, 0, 1, 106, i))(Bring(26, 0, 1, 230, i))()):
-        # (Line 149) terrTimer[i] = TERR_TIMER;
+        # (Line 160) terrTimer[i] = TERR_TIMER;
         _ARRW(terrTimer, i) << (TERR_TIMER)
-        # (Line 150) }
-        # (Line 153) if(
+        # (Line 161) }
+        # (Line 164) if(
     EUDEndIf()
     _t5 = EUDIf()
-    # (Line 154) checkTerrStage[i] == 2 &&
-    # (Line 155) Bring(13, 0, 1, 106, i) &&
-    # (Line 156) Bring(13, 0, 1, 230, i) &&
-    # (Line 157) Bring(26, 10, 0, 230, i) &&
-    # (Line 158) Bring(14, 10, 0, 230, i) &&
-    # (Line 159) terrTimer[i] == 0
-    # (Line 160) ){
+    # (Line 165) checkTerrStage[i] == 2 &&
+    # (Line 166) Bring(13, 0, 1, 106, i) &&
+    # (Line 167) Bring(13, 0, 1, 230, i) &&
+    # (Line 168) Bring(26, 10, 0, 230, i) &&
+    # (Line 169) Bring(14, 10, 0, 230, i) &&
+    # (Line 170) terrTimer[i] == 0
+    # (Line 171) ){
     if _t5(EUDSCAnd()(_ARRC(checkTerrStage, i) == 2)(Bring(13, 0, 1, 106, i))(Bring(13, 0, 1, 230, i))(Bring(26, 10, 0, 230, i))(Bring(14, 10, 0, 230, i))(_ARRC(terrTimer, i) == 0)()):
-        # (Line 161) RemoveUnitAt(All, 40, i, 13);
-        # (Line 162) checkTerrStage[i] = 0;
+        # (Line 172) RemoveUnitAt(All, 40, i, 13);
+        # (Line 173) checkTerrStage[i] = 0;
         DoActions(RemoveUnitAt(All, 40, i, 13))
         _ARRW(checkTerrStage, i) << (0)
-        # (Line 163) }
-        # (Line 166) if(
+        # (Line 174) }
+        # (Line 177) if(
     EUDEndIf()
     _t6 = EUDIf()
-    # (Line 167) checkTerrStage[i] == 2 &&
-    # (Line 168) Bring(14, 0, 1, 106, i) &&
-    # (Line 169) Bring(13, 0, 1, 230, i) &&
-    # (Line 170) Bring(14, 10, 0, 230, i)
-    # (Line 171) ){
+    # (Line 178) checkTerrStage[i] == 2 &&
+    # (Line 179) Bring(14, 0, 1, 106, i) &&
+    # (Line 180) Bring(13, 0, 1, 230, i) &&
+    # (Line 181) Bring(14, 10, 0, 230, i)
+    # (Line 182) ){
     if _t6(EUDSCAnd()(_ARRC(checkTerrStage, i) == 2)(Bring(14, 0, 1, 106, i))(Bring(13, 0, 1, 230, i))(Bring(14, 10, 0, 230, i))()):
-        # (Line 172) GiveUnits(All, 106, 14, i, 13);
-        # (Line 173) checkTerrStage[i] = 0;
+        # (Line 183) GiveUnits(All, 106, 14, i, 13);
+        # (Line 184) checkTerrStage[i] = 0;
         DoActions(GiveUnits(All, 106, 14, i, 13))
         _ARRW(checkTerrStage, i) << (0)
-        # (Line 174) terrTimer[i] = 0;
+        # (Line 185) terrTimer[i] = 0;
         _ARRW(terrTimer, i) << (0)
-        # (Line 175) }
-        # (Line 177) if(terrTimer[i] > 0){
+        # (Line 186) }
+        # (Line 188) if(terrTimer[i] > 0){
     EUDEndIf()
     if EUDIf()(_ARRC(terrTimer, i) <= 0, neg=True):
-        # (Line 178) terrTimer[i] -= 1;
+        # (Line 189) terrTimer[i] -= 1;
         _ARRW(terrTimer, i).__isub__(1)
-        # (Line 179) }
-        # (Line 180) }
+        # (Line 190) }
+        # (Line 191) }
     EUDEndIf()
-    # (Line 182) function handleTerrResoponse(){
+    # (Line 193) function handleTerrResoponse(){
 
 @EUDFunc
 def f_handleTerrResoponse():
-    # (Line 183) for(var i = 8 ; i < 30 ; i++){
+    # (Line 194) for(var i = 8 ; i < 30 ; i++){
     i = _TYLV([None], [8])
     if EUDWhile()(i >= 30, neg=True):
         def _t2():
             i.__iadd__(1)
-        # (Line 184) handleTerrPart0(i);
+        # (Line 195) handleTerrPart0(i);
         f_handleTerrPart0(i)
-        # (Line 185) }
-        # (Line 186) }
+        # (Line 196) }
+        # (Line 197) }
         EUDSetContinuePoint()
         _t2()
     EUDEndWhile()
-    # (Line 188) function playerLoop(){
+    # (Line 199) function readTileInfo(epd){
+
+@EUDFunc
+def f_readTileInfo(epd):
+    # (Line 200) const x,y = posread_epd(epd+0x28/4);
+    x, y = List2Assignable([f_posread_epd(epd + 0x28 // 4)])
+    # (Line 201) const x1,y1 = x >> 5, y >> 5;
+    x1, y1 = List2Assignable([x >> 5, y >> 5])
+    # (Line 202) const tileInfo = mf.tilesetInfo[y1*256+x1];
+    tileInfo = mf.tilesetInfo[y1 * 256 + x1]
+    # (Line 203) return tileInfo;
+    EUDReturn(tileInfo)
+    # (Line 204) }
+    # (Line 206) function playerLoop(){
 
 @EUDFunc
 def f_playerLoop():
-    # (Line 189) foreach(cp : EUDLoopPlayer(None)){
+    # (Line 207) foreach(cp : EUDLoopPlayer(None)){
     for cp in EUDLoopPlayer(None):
-        # (Line 190) setcurpl(cp);
+        # (Line 208) setcurpl(cp);
         f_setcurpl(cp)
-        # (Line 191) handleTerrResoponse();
+        # (Line 209) handleTerrResoponse();
         f_handleTerrResoponse()
-        # (Line 192) }
-        # (Line 193) }
+        # (Line 210) }
+        # (Line 211) }
 
-    # (Line 195) function mainLoop(){
+    # (Line 213) function mainLoop(){
 
 @EUDFunc
 def f_mainLoop():
-    # (Line 196) setSelectedCityName();
+    # (Line 214) setSelectedCityName();
     f_setSelectedCityName()
-    # (Line 197) playerLoop();
+    # (Line 216) playerLoop();
     f_playerLoop()
-    # (Line 198) }
+    # (Line 217) }

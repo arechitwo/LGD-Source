@@ -6,11 +6,11 @@ except NameError:
     def init_wireframe():
         WireFrameDataEditor.WireFrameInit()
         WireFrameDataEditor.ChangeWireframe(52, 215)
-        WireFrameDataEditor.ChangeWireframe(160, 171)
+        WireFrameDataEditor.ChangeWireframe(168, 154)
 
 else:
     InitialWireframe.wirefram(52, 215)
-    InitialWireframe.wirefram(160, 171)
+    InitialWireframe.wirefram(168, 154)
 
 
 def onPluginStart():
@@ -23,12 +23,12 @@ def onPluginStart():
         SetMemory(0x5194B0, SetTo, 4356240),
         SetMemory(0x519650, SetTo, 4346240),
         SetMemory(0x519654, SetTo, 4356240),
-        SetMemory(0x5199A4, SetTo, 4344192),
-        SetMemory(0x5199A8, SetTo, 4353872),
         SetMemory(0x5199B0, SetTo, 4344192),
         SetMemory(0x5199B4, SetTo, 4353872),
         SetMemory(0x519A34, SetTo, 4344192),
         SetMemory(0x519A38, SetTo, 4353872),
+        SetMemory(0x519B84, SetTo, 4344192),
+        SetMemory(0x519B88, SetTo, 4353872),
         SetMemory(0x519D40, SetTo, 4346240),
         SetMemory(0x519D44, SetTo, 4356240),
         SetMemory(0x519D4C, SetTo, 4346240),
@@ -75,7 +75,7 @@ def onPluginStart():
     btnptr22 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,228,0,208,130,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,4,0,254,0,208,130,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,208,130,66,0,112,51,66,0,0,0,0,0,156,2,0,0])
     btnptr28 = Db(bytebuffer)
-    bytebuffer = bytearray([1,0,228,0,208,130,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,4,0,254,0,208,130,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,208,130,66,0,112,51,66,0,0,0,0,0,156,2,0,0])
+    bytebuffer = bytearray([])
     btnptr29 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,228,0,96,136,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,4,0,254,0,96,136,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,96,136,66,0,112,51,66,0,0,0,0,0,156,2,0,0])
     btnptr30 = Db(bytebuffer)
@@ -105,11 +105,9 @@ def onPluginStart():
     btnptr54 = Db(bytebuffer)
     bytebuffer = bytearray([])
     btnptr57 = Db(bytebuffer)
-    bytebuffer = bytearray([1,0,228,0,208,130,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,4,0,254,0,208,130,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,208,130,66,0,112,51,66,0,0,0,0,0,156,2,0,0,9,0,68,0,128,150,66,0,240,51,66,0,28,0,28,0,240,4,247,4,9,0,63,0,64,150,66,0,240,49,66,0,63,0,63,0,240,4,248,4])
-    btnptr61 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,228,0,208,130,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,4,0,254,0,208,130,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,208,130,66,0,112,51,66,0,0,0,0,0,156,2,0,0])
     btnptr63 = Db(bytebuffer)
-    bytebuffer = bytearray([1,0,228,0,208,130,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,4,0,232,0,224,133,66,0,208,59,66,0,0,0,0,0,165,2,0,0,5,0,231,0,176,132,66,0,112,59,66,0,0,0,0,0,163,2,0,0,6,0,233,0,128,132,66,0,96,55,66,0,0,0,0,0,164,2,0,0,7,0,16,1,128,139,66,0,240,154,69,0,0,0,240,0,166,2,0,0])
+    bytebuffer = bytearray([1,0,228,0,208,130,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,7,0,16,1,128,139,66,0,240,154,69,0,0,0,240,0,166,2,0,0])
     btnptr64 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,228,0,208,130,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,4,0,254,0,208,130,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,208,130,66,0,112,51,66,0,0,0,0,0,156,2,0,0])
     btnptr67 = Db(bytebuffer)
@@ -119,6 +117,8 @@ def onPluginStart():
     btnptr71 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,228,0,208,130,66,0,96,66,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,208,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,224,134,66,0,0,66,66,0,0,0,0,0,154,2,247,2,4,0,254,0,208,130,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,208,130,66,0,112,51,66,0,0,0,0,0,156,2,0,0,7,0,73,0,0,142,66,0,144,51,66,0,73,0,73,0,95,2,0,0,9,0,236,0,48,133,66,0,144,52,66,0,0,0,254,0,181,2,0,0])
     btnptr72 = Db(bytebuffer)
+    bytebuffer = bytearray([1,0,228,0,208,130,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,4,0,254,0,208,130,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,208,130,66,0,112,51,66,0,0,0,0,0,156,2,0,0,9,0,154,0,96,142,66,0,208,61,66,0,128,0,154,0,200,1,200,1])
+    btnptr74 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,228,0,208,130,66,0,64,68,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,240,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,48,143,66,0,128,67,66,0,0,0,0,0,154,2,0,0,4,0,254,0,208,130,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,208,130,66,0,112,51,66,0,0,0,0,0,156,2,0,0])
     btnptr79 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,228,0,208,130,66,0,96,66,66,0,0,0,0,0,152,2,0,0,2,0,229,0,208,130,66,0,208,51,66,0,0,0,0,0,153,2,0,0,3,0,230,0,224,134,66,0,0,66,66,0,0,0,0,0,154,2,247,2,4,0,254,0,208,130,66,0,64,65,66,0,0,0,0,0,155,2,0,0,5,0,255,0,208,130,66,0,112,51,66,0,0,0,0,0,156,2,0,0,7,0,73,0,0,142,66,0,144,51,66,0,73,0,73,0,95,2,0,0,9,0,236,0,48,133,66,0,144,52,66,0,0,0,254,0,181,2,0,0])
@@ -167,7 +167,7 @@ def onPluginStart():
     btnptr141 = Db(bytebuffer)
     bytebuffer = bytearray([])
     btnptr143 = Db(bytebuffer)
-    bytebuffer = bytearray([1,0,64,0,96,142,66,0,176,52,66,0,64,0,64,0,87,2,0,0,2,0,40,0,96,142,66,0,176,52,66,0,75,0,75,0,90,2,0,0,3,0,0,0,96,142,66,0,176,52,66,0,0,0,0,0,74,2,0,0,4,0,1,0,96,142,66,0,176,52,66,0,1,0,1,0,73,2,0,0,5,0,2,0,96,142,66,0,176,52,66,0,2,0,2,0,251,5,0,0,6,0,39,0,96,142,66,0,176,52,66,0,39,0,39,0,250,5,0,0,7,0,34,0,96,142,66,0,176,52,66,0,34,0,34,0,223,5,0,0,8,0,67,0,96,142,66,0,176,52,66,0,67,0,67,0,222,5,0,0,9,0,236,0,48,133,66,0,144,52,66,0,0,0,254,0,181,2,0,0])
+    bytebuffer = bytearray([1,0,0,0,96,142,66,0,176,52,66,0,0,0,0,0,1,0,1,0])
     btnptr154 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,64,0,96,142,66,0,176,52,66,0,64,0,64,0,87,2,0,0,2,0,40,0,96,142,66,0,176,52,66,0,75,0,75,0,90,2,0,0,3,0,0,0,96,142,66,0,176,52,66,0,0,0,0,0,74,2,0,0,4,0,1,0,96,142,66,0,176,52,66,0,1,0,1,0,73,2,0,0,5,0,2,0,96,142,66,0,176,52,66,0,2,0,2,0,251,5,0,0,6,0,39,0,96,142,66,0,176,52,66,0,39,0,39,0,250,5,0,0,7,0,34,0,96,142,66,0,176,52,66,0,34,0,34,0,223,5,0,0,8,0,67,0,96,142,66,0,176,52,66,0,67,0,67,0,222,5,0,0,9,0,236,0,48,133,66,0,144,52,66,0,0,0,254,0,181,2,0,0])
     btnptr155 = Db(bytebuffer)
@@ -185,6 +185,8 @@ def onPluginStart():
     btnptr166 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,69,0,96,142,66,0,176,52,66,0,69,0,69,0,94,2,0,0,2,0,43,0,96,142,66,0,176,52,66,0,43,0,43,0,92,2,0,0,3,0,12,0,96,142,66,0,176,52,66,0,12,0,12,0,84,2,0,0,6,0,30,1,32,149,66,0,160,68,66,0,0,0,0,0,160,2,0,0,8,0,83,0,96,142,66,0,176,52,66,0,96,0,96,0,199,5,0,0,9,0,236,0,48,133,66,0,144,52,66,0,0,0,254,0,181,2,0,0])
     btnptr167 = Db(bytebuffer)
+    bytebuffer = bytearray([4,0,166,0,96,142,66,0,208,61,66,0,166,0,166,0,63,2,1,0,5,0,167,0,96,142,66,0,208,61,66,0,167,0,167,0,64,2,1,0,6,0,155,0,96,142,66,0,208,61,66,0,155,0,155,0,65,2,1,0,7,0,156,0,96,142,66,0,208,61,66,0,156,0,156,0,66,2,1,0,8,0,164,0,96,142,66,0,208,61,66,0,164,0,164,0,67,2,1,0,9,0,159,0,96,142,66,0,208,61,66,0,159,0,159,0,68,2,1,0])
+    btnptr168 = Db(bytebuffer)
     bytebuffer = bytearray([])
     btnptr169 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,64,0,96,142,66,0,176,52,66,0,64,0,64,0,87,2,0,0,2,0,159,0,96,142,66,0,176,52,66,0,49,0,49,0,89,2,0,0])
@@ -205,7 +207,7 @@ def onPluginStart():
     btnptr238 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,112,0,96,142,66,0,176,62,66,0,112,0,112,0,140,2,199,2,2,0,123,0,96,142,66,0,176,62,66,0,123,0,123,0,145,2,0,0,3,0,110,0,96,142,66,0,176,62,66,0,110,0,110,0,136,2,0,0,4,0,124,0,96,142,66,0,176,62,66,0,124,0,124,0,139,2,0,0,5,0,114,0,96,142,66,0,176,62,66,0,114,0,114,0,143,2,0,0,6,0,109,0,96,142,66,0,176,62,66,0,109,0,109,0,215,5,0,0,9,0,236,0,208,130,66,0,240,154,69,0,0,0,228,0,176,2,0,0])
     btnptr239 = Db(bytebuffer)
-    bytebuffer = bytearray([1,0,154,0,96,142,66,0,208,61,66,0,154,0,154,0,118,2,141,2,2,0,155,0,96,142,66,0,208,61,66,0,155,0,155,0,133,2,0,0,3,0,162,0,96,142,66,0,208,61,66,0,162,0,162,0,123,2,1,0,4,0,166,0,96,142,66,0,208,61,66,0,166,0,166,0,238,5,0,0,5,0,169,0,96,142,66,0,208,61,66,0,169,0,169,0,131,2,0,0,6,0,164,0,96,142,66,0,208,61,66,0,164,0,164,0,124,2,0,0,7,0,171,0,96,142,66,0,208,61,66,0,160,0,160,0,132,2,0,0,9,0,236,0,208,130,66,0,240,154,69,0,0,0,228,0,176,2,0,0])
+    bytebuffer = bytearray([1,0,156,0,208,130,66,0,208,61,66,0,164,0,156,0,124,2,1,0,2,0,155,0,208,130,66,0,208,61,66,0,155,0,155,0,133,2,0,0,3,0,162,0,208,130,66,0,208,61,66,0,162,0,162,0,123,2,1,0,5,0,167,0,208,130,66,0,208,61,66,0,169,0,167,0,131,2,0,0,6,0,166,0,208,130,66,0,208,61,66,0,166,0,166,0,238,5,0,0,9,0,236,0,208,130,66,0,240,154,69,0,0,0,228,0,176,2,0,0])
     btnptr240 = Db(bytebuffer)
     bytebuffer = bytearray([1,0,113,0,96,142,66,0,176,62,66,0,113,0,113,0,142,2,200,2,2,0,114,0,96,142,66,0,176,62,66,0,114,0,114,0,143,2,201,2,3,0,116,0,96,142,66,0,176,62,66,0,116,0,116,0,144,2,202,2,9,0,236,0,208,130,66,0,240,154,69,0,0,0,228,0,176,2,0,0])
     btnptr242 = Db(bytebuffer)
@@ -257,7 +259,7 @@ def onPluginStart():
     ])
     DoActions([
         SetMemory(0x518948, SetTo, btnptr29),
-        SetMemory(0x518944, SetTo, 5),
+        SetMemory(0x518944, SetTo, 0),
     ])
     DoActions([
         SetMemory(0x518954, SetTo, btnptr30),
@@ -316,16 +318,12 @@ def onPluginStart():
         SetMemory(0x518A94, SetTo, 0),
     ])
     DoActions([
-        SetMemory(0x518AC8, SetTo, btnptr61),
-        SetMemory(0x518AC4, SetTo, 7),
-    ])
-    DoActions([
         SetMemory(0x518AE0, SetTo, btnptr63),
         SetMemory(0x518ADC, SetTo, 5),
     ])
     DoActions([
         SetMemory(0x518AEC, SetTo, btnptr64),
-        SetMemory(0x518AE8, SetTo, 7),
+        SetMemory(0x518AE8, SetTo, 4),
     ])
     DoActions([
         SetMemory(0x518B10, SetTo, btnptr67),
@@ -342,6 +340,10 @@ def onPluginStart():
     DoActions([
         SetMemory(0x518B4C, SetTo, btnptr72),
         SetMemory(0x518B48, SetTo, 7),
+    ])
+    DoActions([
+        SetMemory(0x518B64, SetTo, btnptr74),
+        SetMemory(0x518B60, SetTo, 6),
     ])
     DoActions([
         SetMemory(0x518BA0, SetTo, btnptr79),
@@ -441,7 +443,7 @@ def onPluginStart():
     ])
     DoActions([
         SetMemory(0x518F24, SetTo, btnptr154),
-        SetMemory(0x518F20, SetTo, 9),
+        SetMemory(0x518F20, SetTo, 1),
     ])
     DoActions([
         SetMemory(0x518F30, SetTo, btnptr155),
@@ -474,6 +476,10 @@ def onPluginStart():
     DoActions([
         SetMemory(0x518FC0, SetTo, btnptr167),
         SetMemory(0x518FBC, SetTo, 6),
+    ])
+    DoActions([
+        SetMemory(0x518FCC, SetTo, btnptr168),
+        SetMemory(0x518FC8, SetTo, 6),
     ])
     DoActions([
         SetMemory(0x518FD8, SetTo, btnptr169),
@@ -517,7 +523,7 @@ def onPluginStart():
     ])
     DoActions([
         SetMemory(0x51932C, SetTo, btnptr240),
-        SetMemory(0x519328, SetTo, 8),
+        SetMemory(0x519328, SetTo, 6),
     ])
     DoActions([
         SetMemory(0x519344, SetTo, btnptr242),
@@ -538,94 +544,94 @@ def onPluginStart():
 
 def beforeTriggerExec():
     DoActions([
-        SetMemory(0x660A70 + 0, SetTo, 458753),
-        SetMemory(0x660A70 + 4, SetTo, 1179661),
-        SetMemory(0x660A70 + 8, SetTo, 1703936),
-        SetMemory(0x660A70 + 12, SetTo, 1900544),
-        SetMemory(0x660A70 + 16, SetTo, 2883625),
-        SetMemory(0x660A70 + 20, SetTo, 3080192),
-        SetMemory(0x660A70 + 24, SetTo, 52),
-        SetMemory(0x660A70 + 28, SetTo, 3670071),
-        SetMemory(0x660A70 + 32, SetTo, 4194363),
-        SetMemory(0x660A70 + 36, SetTo, 4521984),
-        SetMemory(0x660A70 + 40, SetTo, 72),
+        SetMemory(0x660A70 + 0, SetTo, 262145),
+        SetMemory(0x660A70 + 4, SetTo, 983050),
+        SetMemory(0x660A70 + 8, SetTo, 1507328),
+        SetMemory(0x660A70 + 12, SetTo, 1703936),
+        SetMemory(0x660A70 + 16, SetTo, 2687014),
+        SetMemory(0x660A70 + 20, SetTo, 2883584),
+        SetMemory(0x660A70 + 24, SetTo, 49),
+        SetMemory(0x660A70 + 28, SetTo, 3473460),
+        SetMemory(0x660A70 + 32, SetTo, 3997752),
+        SetMemory(0x660A70 + 36, SetTo, 4325376),
+        SetMemory(0x660A70 + 40, SetTo, 69),
         SetMemory(0x660A70 + 44, SetTo, 0),
         SetMemory(0x660A70 + 48, SetTo, 0),
-        SetMemory(0x660A70 + 52, SetTo, 4915200),
-        SetMemory(0x660A70 + 56, SetTo, 5242880),
-        SetMemory(0x660A70 + 60, SetTo, 83),
-        SetMemory(0x660A70 + 64, SetTo, 86),
-        SetMemory(0x660A70 + 68, SetTo, 91),
-        SetMemory(0x660A70 + 72, SetTo, 6553600),
-        SetMemory(0x660A70 + 76, SetTo, 7209065),
-        SetMemory(0x660A70 + 80, SetTo, 7929972),
-        SetMemory(0x660A70 + 84, SetTo, 8650879),
-        SetMemory(0x660A70 + 88, SetTo, 9044103),
-        SetMemory(0x660A70 + 92, SetTo, 9437325),
-        SetMemory(0x660A70 + 96, SetTo, 9830549),
-        SetMemory(0x660A70 + 100, SetTo, 153),
-        SetMemory(0x660A70 + 104, SetTo, 10289308),
-        SetMemory(0x660A70 + 108, SetTo, 11206821),
-        SetMemory(0x660A70 + 112, SetTo, 11731120),
-        SetMemory(0x660A70 + 116, SetTo, 182),
-        SetMemory(0x660A70 + 120, SetTo, 12386487),
-        SetMemory(0x660A70 + 124, SetTo, 12648640),
-        SetMemory(0x660A70 + 128, SetTo, 14221511),
-        SetMemory(0x660A70 + 132, SetTo, 14680284),
-        SetMemory(0x660A70 + 136, SetTo, 15270118),
-        SetMemory(0x660A70 + 140, SetTo, 15859951),
-        SetMemory(0x660A70 + 144, SetTo, 16318710),
-        SetMemory(0x660A70 + 148, SetTo, 16974080),
-        SetMemory(0x660A70 + 152, SetTo, 265),
-        SetMemory(0x660A70 + 156, SetTo, 17563648),
-        SetMemory(0x660A70 + 160, SetTo, 17957135),
-        SetMemory(0x660A70 + 164, SetTo, 18153472),
-        SetMemory(0x660A70 + 168, SetTo, 18415896),
+        SetMemory(0x660A70 + 52, SetTo, 4718592),
+        SetMemory(0x660A70 + 56, SetTo, 5046272),
+        SetMemory(0x660A70 + 60, SetTo, 80),
+        SetMemory(0x660A70 + 64, SetTo, 83),
+        SetMemory(0x660A70 + 68, SetTo, 88),
+        SetMemory(0x660A70 + 72, SetTo, 6356992),
+        SetMemory(0x660A70 + 76, SetTo, 7012454),
+        SetMemory(0x660A70 + 80, SetTo, 7733361),
+        SetMemory(0x660A70 + 84, SetTo, 8454268),
+        SetMemory(0x660A70 + 88, SetTo, 8847492),
+        SetMemory(0x660A70 + 92, SetTo, 9240714),
+        SetMemory(0x660A70 + 96, SetTo, 9633938),
+        SetMemory(0x660A70 + 100, SetTo, 150),
+        SetMemory(0x660A70 + 104, SetTo, 10092697),
+        SetMemory(0x660A70 + 108, SetTo, 11010210),
+        SetMemory(0x660A70 + 112, SetTo, 11534509),
+        SetMemory(0x660A70 + 116, SetTo, 179),
+        SetMemory(0x660A70 + 120, SetTo, 12189876),
+        SetMemory(0x660A70 + 124, SetTo, 12452029),
+        SetMemory(0x660A70 + 128, SetTo, 14024900),
+        SetMemory(0x660A70 + 132, SetTo, 14483673),
+        SetMemory(0x660A70 + 136, SetTo, 15073507),
+        SetMemory(0x660A70 + 140, SetTo, 15663340),
+        SetMemory(0x660A70 + 144, SetTo, 16122099),
+        SetMemory(0x660A70 + 148, SetTo, 16580608),
+        SetMemory(0x660A70 + 152, SetTo, 259),
+        SetMemory(0x660A70 + 156, SetTo, 17170432),
+        SetMemory(0x660A70 + 160, SetTo, 17563913),
+        SetMemory(0x660A70 + 164, SetTo, 17760256),
+        SetMemory(0x660A70 + 168, SetTo, 18022674),
         SetMemory(0x660A70 + 172, SetTo, 0),
-        SetMemory(0x660A70 + 176, SetTo, 19071264),
-        SetMemory(0x660A70 + 180, SetTo, 297),
-        SetMemory(0x660A70 + 184, SetTo, 19857408),
-        SetMemory(0x660A70 + 188, SetTo, 20119858),
-        SetMemory(0x660A70 + 192, SetTo, 310),
-        SetMemory(0x660A70 + 196, SetTo, 20578615),
-        SetMemory(0x660A70 + 200, SetTo, 319),
-        SetMemory(0x660A70 + 204, SetTo, 21102592),
-        SetMemory(0x660A70 + 208, SetTo, 325),
-        SetMemory(0x660A70 + 212, SetTo, 21954891),
-        SetMemory(0x660A70 + 216, SetTo, 22282576),
-        SetMemory(0x660A70 + 220, SetTo, 22872409),
-        SetMemory(0x660A70 + 224, SetTo, 23200094),
-        SetMemory(0x660A70 + 228, SetTo, 23462243),
-        SetMemory(0x660A70 + 232, SetTo, 23593319),
-        SetMemory(0x660A70 + 236, SetTo, 361),
-        SetMemory(0x660A70 + 240, SetTo, 362),
-        SetMemory(0x660A70 + 244, SetTo, 23855467),
-        SetMemory(0x660A70 + 248, SetTo, 24379760),
+        SetMemory(0x660A70 + 176, SetTo, 18678042),
+        SetMemory(0x660A70 + 180, SetTo, 291),
+        SetMemory(0x660A70 + 184, SetTo, 19464192),
+        SetMemory(0x660A70 + 188, SetTo, 19726636),
+        SetMemory(0x660A70 + 192, SetTo, 304),
+        SetMemory(0x660A70 + 196, SetTo, 20185393),
+        SetMemory(0x660A70 + 200, SetTo, 313),
+        SetMemory(0x660A70 + 204, SetTo, 20709376),
+        SetMemory(0x660A70 + 208, SetTo, 319),
+        SetMemory(0x660A70 + 212, SetTo, 21561669),
+        SetMemory(0x660A70 + 216, SetTo, 21889354),
+        SetMemory(0x660A70 + 220, SetTo, 22479187),
+        SetMemory(0x660A70 + 224, SetTo, 22806872),
+        SetMemory(0x660A70 + 228, SetTo, 23069021),
+        SetMemory(0x660A70 + 232, SetTo, 23200097),
+        SetMemory(0x660A70 + 236, SetTo, 355),
+        SetMemory(0x660A70 + 240, SetTo, 356),
+        SetMemory(0x660A70 + 244, SetTo, 23462245),
+        SetMemory(0x660A70 + 248, SetTo, 23986538),
         SetMemory(0x660A70 + 252, SetTo, 0),
-        SetMemory(0x660A70 + 256, SetTo, 0),
+        SetMemory(0x660A70 + 256, SetTo, 367),
         SetMemory(0x660A70 + 260, SetTo, 0),
         SetMemory(0x660A70 + 264, SetTo, 0),
         SetMemory(0x660A70 + 268, SetTo, 0),
         SetMemory(0x660A70 + 272, SetTo, 0),
         SetMemory(0x660A70 + 276, SetTo, 0),
-        SetMemory(0x660A70 + 280, SetTo, 373),
-        SetMemory(0x660A70 + 284, SetTo, 24510464),
+        SetMemory(0x660A70 + 280, SetTo, 369),
+        SetMemory(0x660A70 + 284, SetTo, 24248320),
         SetMemory(0x660A70 + 288, SetTo, 0),
         SetMemory(0x660A70 + 292, SetTo, 0),
         SetMemory(0x660A70 + 296, SetTo, 0),
         SetMemory(0x660A70 + 300, SetTo, 0),
         SetMemory(0x660A70 + 304, SetTo, 0),
-        SetMemory(0x660A70 + 308, SetTo, 24969594),
-        SetMemory(0x660A70 + 312, SetTo, 25165824),
-        SetMemory(0x660A70 + 316, SetTo, 25362432),
-        SetMemory(0x660A70 + 320, SetTo, 388),
-        SetMemory(0x660A70 + 324, SetTo, 25821575),
-        SetMemory(0x660A70 + 328, SetTo, 26214797),
-        SetMemory(0x660A70 + 332, SetTo, 405),
-        SetMemory(0x660A70 + 336, SetTo, 26738688),
-        SetMemory(0x660A70 + 340, SetTo, 27001243),
-        SetMemory(0x660A70 + 344, SetTo, 415),
-        SetMemory(0x660A70 + 348, SetTo, 416),
+        SetMemory(0x660A70 + 308, SetTo, 24707446),
+        SetMemory(0x660A70 + 312, SetTo, 25100668),
+        SetMemory(0x660A70 + 316, SetTo, 25296896),
+        SetMemory(0x660A70 + 320, SetTo, 389),
+        SetMemory(0x660A70 + 324, SetTo, 25952649),
+        SetMemory(0x660A70 + 328, SetTo, 26345871),
+        SetMemory(0x660A70 + 332, SetTo, 26870167),
+        SetMemory(0x660A70 + 336, SetTo, 27066368),
+        SetMemory(0x660A70 + 340, SetTo, 27328928),
+        SetMemory(0x660A70 + 344, SetTo, 420),
+        SetMemory(0x660A70 + 348, SetTo, 421),
         SetMemory(0x660A70 + 352, SetTo, 0),
         SetMemory(0x660A70 + 356, SetTo, 0),
         SetMemory(0x660A70 + 360, SetTo, 0),
@@ -742,82 +748,82 @@ def beforeTriggerExec():
         SetMemory(0x665580 + 52, SetTo, 8650880),
         SetMemory(0x665580 + 56, SetTo, 9568395),
         SetMemory(0x665580 + 60, SetTo, 10289305),
-        SetMemory(0x665580 + 64, SetTo, 10813601),
-        SetMemory(0x665580 + 68, SetTo, 11337897),
-        SetMemory(0x665580 + 72, SetTo, 177),
-        SetMemory(0x665580 + 76, SetTo, 11730944),
-        SetMemory(0x665580 + 80, SetTo, 12124342),
+        SetMemory(0x665580 + 64, SetTo, 11206823),
+        SetMemory(0x665580 + 68, SetTo, 11731119),
+        SetMemory(0x665580 + 72, SetTo, 183),
+        SetMemory(0x665580 + 76, SetTo, 12124160),
+        SetMemory(0x665580 + 80, SetTo, 12517564),
         SetMemory(0x665580 + 84, SetTo, 0),
         SetMemory(0x665580 + 88, SetTo, 0),
-        SetMemory(0x665580 + 92, SetTo, 192),
-        SetMemory(0x665580 + 96, SetTo, 12910592),
-        SetMemory(0x665580 + 100, SetTo, 13697225),
-        SetMemory(0x665580 + 104, SetTo, 15139039),
-        SetMemory(0x665580 + 108, SetTo, 16187631),
-        SetMemory(0x665580 + 112, SetTo, 17629445),
-        SetMemory(0x665580 + 116, SetTo, 18678037),
-        SetMemory(0x665580 + 120, SetTo, 19726629),
-        SetMemory(0x665580 + 124, SetTo, 309),
-        SetMemory(0x665580 + 128, SetTo, 21102909),
-        SetMemory(0x665580 + 132, SetTo, 21364736),
-        SetMemory(0x665580 + 136, SetTo, 21626880),
-        SetMemory(0x665580 + 140, SetTo, 22085965),
-        SetMemory(0x665580 + 144, SetTo, 341),
-        SetMemory(0x665580 + 148, SetTo, 345),
-        SetMemory(0x665580 + 152, SetTo, 22806528),
-        SetMemory(0x665580 + 156, SetTo, 23789921),
-        SetMemory(0x665580 + 160, SetTo, 24183150),
-        SetMemory(0x665580 + 164, SetTo, 372),
-        SetMemory(0x665580 + 168, SetTo, 24772983),
-        SetMemory(0x665580 + 172, SetTo, 381),
+        SetMemory(0x665580 + 92, SetTo, 198),
+        SetMemory(0x665580 + 96, SetTo, 13303808),
+        SetMemory(0x665580 + 100, SetTo, 14090447),
+        SetMemory(0x665580 + 104, SetTo, 15532261),
+        SetMemory(0x665580 + 108, SetTo, 16580853),
+        SetMemory(0x665580 + 112, SetTo, 18022667),
+        SetMemory(0x665580 + 116, SetTo, 19071259),
+        SetMemory(0x665580 + 120, SetTo, 20119851),
+        SetMemory(0x665580 + 124, SetTo, 315),
+        SetMemory(0x665580 + 128, SetTo, 21496131),
+        SetMemory(0x665580 + 132, SetTo, 21757952),
+        SetMemory(0x665580 + 136, SetTo, 22020096),
+        SetMemory(0x665580 + 140, SetTo, 22479187),
+        SetMemory(0x665580 + 144, SetTo, 346),
+        SetMemory(0x665580 + 148, SetTo, 349),
+        SetMemory(0x665580 + 152, SetTo, 23068672),
+        SetMemory(0x665580 + 156, SetTo, 23986532),
+        SetMemory(0x665580 + 160, SetTo, 24379761),
+        SetMemory(0x665580 + 164, SetTo, 375),
+        SetMemory(0x665580 + 168, SetTo, 24969594),
+        SetMemory(0x665580 + 172, SetTo, 384),
         SetMemory(0x665580 + 176, SetTo, 0),
-        SetMemory(0x665580 + 180, SetTo, 384),
-        SetMemory(0x665580 + 184, SetTo, 25559427),
-        SetMemory(0x665580 + 188, SetTo, 26149260),
-        SetMemory(0x665580 + 192, SetTo, 26411008),
+        SetMemory(0x665580 + 180, SetTo, 387),
+        SetMemory(0x665580 + 184, SetTo, 25756038),
+        SetMemory(0x665580 + 188, SetTo, 26345871),
+        SetMemory(0x665580 + 192, SetTo, 26607616),
         SetMemory(0x665580 + 196, SetTo, 0),
-        SetMemory(0x665580 + 200, SetTo, 26804630),
-        SetMemory(0x665580 + 204, SetTo, 27787686),
-        SetMemory(0x665580 + 208, SetTo, 431),
-        SetMemory(0x665580 + 212, SetTo, 28508160),
-        SetMemory(0x665580 + 216, SetTo, 439),
-        SetMemory(0x665580 + 220, SetTo, 29229056),
-        SetMemory(0x665580 + 224, SetTo, 449),
+        SetMemory(0x665580 + 200, SetTo, 27001241),
+        SetMemory(0x665580 + 204, SetTo, 27984297),
+        SetMemory(0x665580 + 208, SetTo, 434),
+        SetMemory(0x665580 + 212, SetTo, 28704768),
+        SetMemory(0x665580 + 216, SetTo, 442),
+        SetMemory(0x665580 + 220, SetTo, 29425664),
+        SetMemory(0x665580 + 224, SetTo, 452),
         SetMemory(0x665580 + 228, SetTo, 0),
         SetMemory(0x665580 + 232, SetTo, 0),
         SetMemory(0x665580 + 236, SetTo, 0),
         SetMemory(0x665580 + 240, SetTo, 0),
-        SetMemory(0x665580 + 244, SetTo, 29622272),
-        SetMemory(0x665580 + 248, SetTo, 29884416),
-        SetMemory(0x665580 + 252, SetTo, 30409164),
-        SetMemory(0x665580 + 256, SetTo, 30933460),
-        SetMemory(0x665580 + 260, SetTo, 31719900),
-        SetMemory(0x665580 + 264, SetTo, 32178176),
-        SetMemory(0x665580 + 268, SetTo, 32702958),
-        SetMemory(0x665580 + 272, SetTo, 504),
+        SetMemory(0x665580 + 244, SetTo, 29818880),
+        SetMemory(0x665580 + 248, SetTo, 30081024),
+        SetMemory(0x665580 + 252, SetTo, 30605775),
+        SetMemory(0x665580 + 256, SetTo, 31130071),
+        SetMemory(0x665580 + 260, SetTo, 31916511),
+        SetMemory(0x665580 + 264, SetTo, 32374784),
+        SetMemory(0x665580 + 268, SetTo, 32899569),
+        SetMemory(0x665580 + 272, SetTo, 507),
         SetMemory(0x665580 + 276, SetTo, 0),
-        SetMemory(0x665580 + 280, SetTo, 512),
+        SetMemory(0x665580 + 280, SetTo, 515),
         SetMemory(0x665580 + 284, SetTo, 0),
         SetMemory(0x665580 + 288, SetTo, 0),
         SetMemory(0x665580 + 292, SetTo, 0),
         SetMemory(0x665580 + 296, SetTo, 0),
         SetMemory(0x665580 + 300, SetTo, 0),
-        SetMemory(0x665580 + 304, SetTo, 516),
-        SetMemory(0x665580 + 308, SetTo, 34078720),
-        SetMemory(0x665580 + 312, SetTo, 34734080),
+        SetMemory(0x665580 + 304, SetTo, 519),
+        SetMemory(0x665580 + 308, SetTo, 0),
+        SetMemory(0x665580 + 312, SetTo, 34275328),
         SetMemory(0x665580 + 316, SetTo, 0),
         SetMemory(0x665580 + 320, SetTo, 0),
         SetMemory(0x665580 + 324, SetTo, 0),
-        SetMemory(0x665580 + 328, SetTo, 34996224),
-        SetMemory(0x665580 + 332, SetTo, 36569626),
-        SetMemory(0x665580 + 336, SetTo, 38470206),
-        SetMemory(0x665580 + 340, SetTo, 40567384),
+        SetMemory(0x665580 + 328, SetTo, 34537472),
+        SetMemory(0x665580 + 332, SetTo, 36110867),
+        SetMemory(0x665580 + 336, SetTo, 38011447),
+        SetMemory(0x665580 + 340, SetTo, 40108625),
         SetMemory(0x665580 + 344, SetTo, 0),
-        SetMemory(0x665580 + 348, SetTo, 41811968),
-        SetMemory(0x665580 + 352, SetTo, 42336898),
-        SetMemory(0x665580 + 356, SetTo, 650),
+        SetMemory(0x665580 + 348, SetTo, 41353216),
+        SetMemory(0x665580 + 352, SetTo, 41878139),
+        SetMemory(0x665580 + 356, SetTo, 643),
         SetMemory(0x665580 + 360, SetTo, 0),
-        SetMemory(0x665580 + 364, SetTo, 654),
+        SetMemory(0x665580 + 364, SetTo, 647),
         SetMemory(0x665580 + 368, SetTo, 0),
         SetMemory(0x665580 + 372, SetTo, 0),
     ])

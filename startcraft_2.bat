@@ -1,0 +1,1 @@
+start "" "F:\GAME\Starcraft\x86\StarCraft.exe" -launch

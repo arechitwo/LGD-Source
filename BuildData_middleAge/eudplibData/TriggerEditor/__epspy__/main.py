@@ -4,8 +4,10 @@ from eudplib.core.eudfunc import EUDTraceLog, EUDTracedFunc, EUDTracedTypedFunc,
 from eudplib.epscript.helper import _RELIMP, _TYGV, _TYSV, _TYLV, _CGFW, _ARR, _VARR, _SRET, _SV, _ATTW, _ARRW, _ATTC, _ARRC, _L2V, _LSH, _ALL
 # (Line 1) import PluginVariables as msqcvar;
 import PluginVariables as msqcvar
-# (Line 3) import Systems.map_manager as mmgr;
+# (Line 2) import Systems.map_manager as mmgr;
 from Systems import map_manager as mmgr
+# (Line 3) import Units.unit_operation as unitop;
+from Units import unit_operation as unitop
 # (Line 5) var addr, ptrAddr, patternAddr, num;
 addr, ptrAddr, patternAddr, num = EUDCreateVariables(4)
 # (Line 6) var pChat;//, chat
@@ -58,22 +60,24 @@ def onPluginStart():
 def beforeTriggerExec():
     # (Line 43) mmgr.mainLoop();
     mmgr.f_mainLoop()
-    # (Line 44) if( patternAddr > 0 ){
+    # (Line 44) unitop.mainLoop();
+    unitop.f_mainLoop()
+    # (Line 45) if( patternAddr > 0 ){
     if EUDIf()(patternAddr <= 0, neg=True):
-        # (Line 45) num = parse(ptrAddr + pattern_len)[[0]];
+        # (Line 46) num = parse(ptrAddr + pattern_len)[[0]];
         num << (f_parse(ptrAddr + pattern_len)[0])
-        # (Line 46) pChat = patternAddr;
+        # (Line 47) pChat = patternAddr;
         pChat << (patternAddr)
-        # (Line 47) }
-        # (Line 49) CreateUnit(1, 42, 64, 7);
+        # (Line 48) }
+        # (Line 50) CreateUnit(1, 42, "생성_삭제_반복", 7);
     EUDEndIf()
-    # (Line 50) RemoveUnit(42, 7);
-    DoActions(CreateUnit(1, 42, 64, 7))
-    # (Line 51) }
+    # (Line 51) RemoveUnit(42, 7);
+    DoActions(CreateUnit(1, 42, "생성_삭제_반복", 7))
+    # (Line 52) }
     DoActions(RemoveUnit(42, 7))
-    # (Line 53) function afterTriggerExec() {
+    # (Line 54) function afterTriggerExec() {
 
 @EUDFunc
 def afterTriggerExec():
-    # (Line 56) }
+    # (Line 57) }
     pass

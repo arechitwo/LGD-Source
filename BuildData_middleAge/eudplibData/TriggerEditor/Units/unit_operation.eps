@@ -1,0 +1,159 @@
+import Units.skill_operation as skill;
+
+const buildingNexus_ = EUDVArray(8)();
+const nexusState_ = EUDArray(8); // 0: 없음, 1: 건설중, 2: 완료
+const guardNexus_ = EUDVArray(8)();
+
+function newNexusFunc(epd){
+    setcurpl(epd + 19);
+    const cp = bread_cp(0, 0);
+    if(buildingNexus_[cp] == 0){
+        buildingNexus_[cp] = epd;
+        nexusState_[cp] = 1;
+        return true;
+    }
+    else{
+        SetDeathsX(CurrentPlayer, SetTo, 0, 0, 0XFF00);
+        setcurpl(cp);
+        SetResources(CurrentPlayer, Add, 300, 0);
+        eprintf("이미 수도를 보유중입니다.");
+        return false;
+    }
+    return false;
+}
+
+function checkNexusDie(cp, unit : CUnit){
+    if(unit.orderID != 0) return;
+    if(unit.unitType == "수도 건설중" ){
+        buildingNexus_[cp] = 0;
+        nexusState_[cp] = 0; // 상태 초기화
+        eprintf("수도가 파괴되었습니다.");
+        // 수도 파괴시 추가 로직 (예: 자원 회수 등)
+    }
+    else if(unit.unitType == "수도"){
+        const deleteguardNexusUnit = CUnit(guardNexus_[cp]);
+        deleteguardNexusUnit.die();
+        buildingNexus_[cp] = 0;
+        nexusState_[cp] = 0; // 상태 초기화
+        eprintf("수도가 파괴되었습니다.");
+    }
+}
+
+function handleNexus(cp){
+    const unit = CUnit(buildingNexus_[cp]);
+    if (!unit) return;
+
+    // 건설중인 상태일 때
+    if (nexusState_[cp] == 1) {
+        if (unit.unitType == "수도 건설중" && unit.orderID == 23) {
+            unit.setloc($L("Transpos1") + cp);
+            unit.remove();
+            nexusState_[cp] = 3; // 임시 상태: 삭제됨, 다음 프레임에서 생성 예정
+            return;
+        }
+        checkNexusDie(cp, unit);
+
+    } 
+    // 삭제된 상태, 새 넥서스 생성 프레임 적용을 위해 위해 작성
+    else if (nexusState_[cp] == 3) {
+        const realNexus = CUnit.from_next();
+        CreateUnit(1, "수도", $L("Transpos1") + cp, cp);
+        buildingNexus_[cp] = realNexus;
+        nexusState_[cp] = 2; // 완료 상태로 변경
+        
+        // 가드 유닛 생성
+        const guardNexusUnit = CUnit.from_next();
+        CreateUnit(1, 29, $L("Transpos1") + cp, cp);
+        guardNexusUnit.statusFlags.Invincible = true;
+        guardNexus_[cp] = guardNexusUnit;
+        return;
+    }
+    if(nexusState_[cp] == 2){
+        checkNexusDie(cp, unit);
+    }
+}
+
+function newUnitLoop(){
+    foreach(ptr, epd : EUDLoopNewUnit(20)){
+        epdswitch(epd + 25,0xFF){
+            case $U("수도 건설중"):
+                newNexusFunc(epd);
+                break;
+            case 168:
+                //newCapitalFunc(epd);
+                break;
+        }
+
+    }
+
+}
+
+
+function getClickedUnitEPD(player : TrgPlayer){
+    const clickedArrayEPD = EUDVArray(8)();
+    const CLICKED_UNIT_OFFESET = EPD(0x6284E8); // 클릭한 유닛의 포인터 주소
+    if (!MemoryEPD(CLICKED_UNIT_OFFESET + 12*player, Exactly, clickedArrayEPD[player]) 
+     && !MemoryEPD(CLICKED_UNIT_OFFESET + 12*player, Exactly, 0)) {
+        clickedArrayEPD[player] = cunitepdread_epd(CLICKED_UNIT_OFFESET + 12*player)[[1]];
+    }
+    return clickedArrayEPD[player];
+}
+
+// 클릭한 유닛의 타입, 명령을 읽는다.
+// 명령에 맞는 스킬을 발동 시킨다.
+// 클릭한 유닛이 없으면 리턴 false
+function logClickedUnit(player){
+
+    const unit = CUnit(getClickedUnitEPD(player)); 
+    const orderId = bread_epd(unit + 0x4C/4, 1);
+    const secondaryOrderId = unit.secondaryOrderID;
+    const unitType = unit.unitType;
+    setcurpl(unit + 0x98/4);
+    const buildQ1 = wread_cp(0, 0);
+    const buildQ2 = wread_cp(0, 2);
+    const buildQ3 = wread_cp(1, 0);
+    const buildQ4 = wread_cp(1, 2);
+    const buildQ5 = wread_cp(2, 0);
+    setcurpl(unit + 0xEC/4);
+    const buildEPD = cunitepdread_cp(0)[[1]];
+    const buildingUnit = CUnit(buildEPD);
+    const remainingBuildTime = wread_epd(buildingUnit + 0xAC/4, 0);
+    setcurpl(player);
+
+    const s = StringBuffer(1024);
+    const txtptr = gettextptr();  // 채팅 포인터 값 가져오기 (채팅보존 출력용)
+    s.insert(0);
+    s.appendf("\x04최근 클릭한 유닛 \x02종류=:{} \x07오더=:{} \x07state=:{} \x07s오더=:{} \n", unitType, orderId, unit.orderState, secondaryOrderId);
+    s.appendf("\x04 현재 position=:{} \x07 target position=:{} \n", unit.pos, unit.orderTargetPos);
+    s.appendf("\x04 move position=:{} \n", unit.moveTargetPos);
+    s.appendf("\x04빌드1=:{} \x07빌드2=:{} \x04빌드3=:{} \x04빌드4=:{} \x07빌드5=:{}\n", buildQ1, buildQ2, buildQ3, buildQ4, buildQ5);
+    s.appendf("\x04ptr=:{}", remainingBuildTime);
+    s.Display();
+    dwwrite(0x640B58, txtptr);
+}
+
+function clickedBuildingCommand(cp){
+    const clickedCUnit = CUnit(getClickedUnitEPD(cp));
+    if (!clickedCUnit) return;
+    logClickedUnit(cp);
+    
+    if(clickedCUnit.unitType == "수도"){
+        //simpleprint("수도 명령을 처리합니다.");
+        skill.useCapitalSkill(cp, clickedCUnit);
+    }
+    
+}
+
+function playerLoop(){
+    foreach(cp: EUDLoopPlayer(None)){
+        setcurpl(cp);
+        handleNexus(cp);
+        clickedBuildingCommand(cp);
+    }
+}
+
+function mainLoop(){
+    newUnitLoop();
+    playerLoop();
+    
+}
