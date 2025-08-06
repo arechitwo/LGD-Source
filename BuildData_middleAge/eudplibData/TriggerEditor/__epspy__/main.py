@@ -8,34 +8,6 @@ import PluginVariables as msqcvar
 from Systems import map_manager as mmgr
 # (Line 3) import Units.unit_operation as unitop;
 from Units import unit_operation as unitop
-# (Line 5) var addr, ptrAddr, patternAddr, num;
-addr, ptrAddr, patternAddr, num = EUDCreateVariables(4)
-# (Line 6) var pChat;//, chat
-pChat = EUDVariable()
-# (Line 8) const nums_ = PVariable();
-nums_ = _CGFW(lambda: [PVariable()], 1)[0]
-# (Line 9) const patternAction_ = PVariable();
-patternAction_ = _CGFW(lambda: [PVariable()], 1)[0]
-# (Line 10) const chatAction_ = PVariable();
-chatAction_ = _CGFW(lambda: [PVariable()], 1)[0]
-# (Line 11) const pattern_len = 13;
-pattern_len = _CGFW(lambda: [13], 1)[0]
-# (Line 14) EUDRegisterObjectToNamespace("addr", addr);
-EUDRegisterObjectToNamespace("addr", addr)
-# (Line 15) EUDRegisterObjectToNamespace("ptrAddr", ptrAddr);
-EUDRegisterObjectToNamespace("ptrAddr", ptrAddr)
-# (Line 16) EUDRegisterObjectToNamespace("patternAddr", patternAddr);
-EUDRegisterObjectToNamespace("patternAddr", patternAddr)
-# (Line 17) EUDRegisterObjectToNamespace("num", num);
-EUDRegisterObjectToNamespace("num", num)
-# (Line 18) EUDRegisterObjectToNamespace("pChat", pChat);
-EUDRegisterObjectToNamespace("pChat", pChat)
-# (Line 19) EUDRegisterObjectToNamespace("nums_", nums_);
-EUDRegisterObjectToNamespace("nums_", nums_)
-# (Line 20) EUDRegisterObjectToNamespace("patternAction_", patternAction_);
-EUDRegisterObjectToNamespace("patternAction_", patternAction_)
-# (Line 21) EUDRegisterObjectToNamespace("chatAction_", chatAction_);
-EUDRegisterObjectToNamespace("chatAction_", chatAction_)
 # (Line 23) function onPluginStart(){
 @EUDFunc
 def onPluginStart():
@@ -62,15 +34,7 @@ def beforeTriggerExec():
     mmgr.f_mainLoop()
     # (Line 44) unitop.mainLoop();
     unitop.f_mainLoop()
-    # (Line 45) if( patternAddr > 0 ){
-    if EUDIf()(patternAddr <= 0, neg=True):
-        # (Line 46) num = parse(ptrAddr + pattern_len)[[0]];
-        num << (f_parse(ptrAddr + pattern_len)[0])
-        # (Line 47) pChat = patternAddr;
-        pChat << (patternAddr)
-        # (Line 48) }
-        # (Line 50) CreateUnit(1, 42, "생성_삭제_반복", 7);
-    EUDEndIf()
+    # (Line 50) CreateUnit(1, 42, "생성_삭제_반복", 7);
     # (Line 51) RemoveUnit(42, 7);
     DoActions(CreateUnit(1, 42, "생성_삭제_반복", 7))
     # (Line 52) }

@@ -79,8 +79,11 @@ function newUnitLoop(){
             case $U("수도 건설중"):
                 newNexusFunc(epd);
                 break;
-            case 168:
+            case $U("수도"):
                 //newCapitalFunc(epd);
+                break;
+            case $U("소도시"):
+                skill.newCity(epd);
                 break;
         }
 
@@ -138,8 +141,7 @@ function clickedBuildingCommand(cp){
     logClickedUnit(cp);
     
     if(clickedCUnit.unitType == "수도"){
-        //simpleprint("수도 명령을 처리합니다.");
-        skill.useCapitalSkill(cp, clickedCUnit);
+        skill.buildFromCapital(cp, clickedCUnit);
     }
     
 }
@@ -155,5 +157,7 @@ function playerLoop(){
 function mainLoop(){
     newUnitLoop();
     playerLoop();
+    skill.run();
+    skill.exit();
     
 }

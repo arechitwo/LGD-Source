@@ -1,9 +1,68 @@
-const tempUnitGroup = UnitGroup(1700);
+import Systems.chat_manager as chatmgr;
 
-function useCapitalSkill(player : TrgPlayer, unit : CUnit){
+const cityMaps = EUDVArray(128, EUDArray)(py_eval("[EUDArray(128) for _ in range(128)]"));
+const tempUnitGroup = UnitGroup(1700);
+const smallCityGroup = UnitGroup(1700);
+
+
+function getBuildQNRange(epd){
+    var buildMaxRange = 12 * 32;
+    var buildMinRange = 5 * 32;
+    var buildQ;
+    epdswitch(epd + 0x98/4, 0xFF){
+        case $U("방앗간"):
+            buildQ = $U("방앗간");
+            buildMaxRange = 12 * 32;
+            buildMinRange = 5 * 32;
+            break;
+        case $U("항구"):
+            buildQ = $U("항구");
+            buildMaxRange = 32 *32;
+            buildMinRange = 0;
+            break;
+        case $U("병영"):
+            buildQ = $U("병영");
+            buildMaxRange = 10 * 32;
+            buildMinRange = 1 * 32;
+            break;
+        case $U("소도시"):
+            buildQ = $U("소도시");
+            buildMaxRange = 15 * 32;
+            buildMinRange = 10 * 32;
+            break;
+        case $U("시장"):
+            buildQ = $U("시장");
+            buildMaxRange = 12 * 32;
+            buildMinRange = 5 * 32;
+            break;
+        default:
+            simpleprint("알 수 없는 빌드 명령이 들어온것임");
+    }
+
+    return buildQ, buildMaxRange, buildMinRange;
+}
+
+function resetBuildOrder(epd){
+    //생산유닛의 값 초기화. 하지 않으면 명령ID가 변경되지 않아서 버그가 일어날 것.
+    bwrite_epd(epd + 0x4C/4, 1, 3);
+    bwrite_epd(epd + 0x4C/4, 2, 0);
+    wwrite_epd(epd + 0x98/4, 0, 228);
+}
+
+function newCity(unit : CUnit){
+    const player = unit.owner;
+    const posX = unit.posX;
+    const posY = unit.posY;
+    const cityX = posX >> 6;
+    const cityY = posY >> 6;
+    cityMaps[cityX][cityY] = player + 1; // 도시 맵에 플레이어 번호 저장 (0은 빈 공간)
+    smallCityGroup.add(unit);
+}
+
+function buildFromCapital(player : TrgPlayer, unit : CUnit){
     const orderId          = unit.orderID; 
 
-    if (orderId != 31 || orderId != 30) return;// 건설 명령이 아닐 경우 리턴
+    if (orderId != 31 && orderId != 30) return false;// 건설 명령이 아닐 경우 리턴
     
     
     const orderState       = unit.orderState;
@@ -11,10 +70,11 @@ function useCapitalSkill(player : TrgPlayer, unit : CUnit){
     const posY             = unit.posY;
     const targetX          = unit.orderTargetX;
     const targetY          = unit.orderTargetY;
-    const buildQ           = unit.buildQueue1;
-    const buildMaxRange    = 15 * 32;
-    const buildMinRange    = 10 * 32;
-
+    
+    // const buildQ           = unit.buildQueue1;
+    // const buildMaxRange    = 15 * 32;
+    // const buildMinRange    = 10 * 32;
+    const buildQ, buildMaxRange, buildMinRange = getBuildQNRange(unit);
     
     const dx = posX - targetX;
     const dy = posY - targetY;
@@ -23,39 +83,91 @@ function useCapitalSkill(player : TrgPlayer, unit : CUnit){
     if (dx * dx + dy * dy > buildMaxRange * buildMaxRange) {
         eprintf("건설 위치가 너무 멉니다.");
         PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
-        //TODO: 건설 위치가 너무 멀 경우 처리 에러 사운드 출력하는 법 찾기.
+        resetBuildOrder(unit);
+        return false;
     }
-    else if(dx * dx + dy * dy < buildMinRange * buildMinRange) {
+
+    if(dx * dx + dy * dy < buildMinRange * buildMinRange) {
         eprintf("건설 위치가 너무 가깝습니다.");
         PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
+        resetBuildOrder(unit);
+        return false;
     }
-    else {
+
+    if(buildQ == 170){//만약 도시일땐 도시끼리의 가까이 있는지도 봐야함
+        const cityX = targetX >> 6;
+        const cityY = targetY >> 6;
+        for(var dx = 0; dx <= 6; dx++) {
+            for(var dy = 0; dy <= 6; dy++) {
+                if((dx + dy) <= 3 && (dx+dy) >= 9) continue; // 마름모(맨해튼 거리 3 이내만 검사)
+                const nx = cityX + dx - 3;
+                const ny = cityY + dy - 3;
+                if(nx >= 128 || ny >= 128) continue;
+                if(cityMaps[nx][ny] != 0) {
+                    eprintf("도시가 이미 존재합니다.");
+                    PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
+                    resetBuildOrder(unit);
+                    return false;
+                }
+            }
+        }
+    }
+    
+    if(true) {
         setloc("buildTarget", targetX, targetY);
         //투명 프로브를 생성하여 대신 건설
-        const temp = CUnit.from_read(EPD(0x628438));
+        const temp = CUnit.from_next();
         
         if(orderId == 31){
             CreateUnit(1, "Protoss Probe", "buildTarget", player);
-            bwrite_epd(temp + 0x4C/4, 1, 31);
+            temp.orderID = 31;
+            //bwrite_epd(temp + 0x4C/4, 1, 31);
         } else {
             CreateUnit(1, "Terran SCV", "buildTarget", player);
-            bwrite_epd(temp + 0x4C/4, 1, 30);
+            //bwrite_epd(temp + 0x4C/4, 1, 30);
+            temp.orderID = 30;
         }
         
         //명령
-        
         //좌표
-        wwrite_epd(temp + 0x58/4, 0, targetX);
-        wwrite_epd(temp + 0x58/4, 2, targetY);
-        //유닛
-        wwrite_epd(temp + 0x98/4, 0, buildQ);
-        //유닛 삭제
-        tempUnitGroup.add(temp);
+        temp.orderTargetX = targetX;
+        temp.orderTargetY = targetY;
+        temp.buildQueue1 = buildQ;
+        //wwrite_epd(temp + 0x58/4, 0, targetX);
+        //wwrite_epd(temp + 0x58/4, 2, targetY);
+        //wwrite_epd(temp + 0x98/4, 0, buildQ);
+        tempUnitGroup.add(temp);//캐싱 지울 유닛
+        resetBuildOrder(unit);
+        return true;
     }
-    
-    //생산유닛의 값 초기화. 하지 않으면 명령ID가 변경되지 않아 버그가 일어날 것.
-    bwrite_epd(unit + 0x4C/4, 1, 3);
-    bwrite_epd(unit + 0x4C/4, 2, 0);
-    wwrite_epd(unit + 0x98/4, 0, 228);
+    return false;
 
+}
+
+function transFormCity(){
+    const chat = chatmgr.chatAction_[0];
+    if(chat == 0) return;
+}
+
+
+function run(){
+    transFormCity();
+    if(Deaths(0, Exactly, 3, 215)){
+        CreateUnit(1, 40, "mouse1", 7);
+    }
+}
+
+function exit(){
+    foreach(unit : tempUnitGroup.cploop) {
+        foreach(dead : unit.dying) {}
+        unit.move_cp(0x4C / 4);
+        if (!DeathsX(CurrentPlayer, Exactly, 31 << 8, 0, 0xFF00) && 
+            !DeathsX(CurrentPlayer, Exactly, 30 << 8, 0, 0xFF00) && 
+            !DeathsX(CurrentPlayer, Exactly, 33 << 8, 0, 0xFF00)) {
+                unit.move_cp(0x93/4);
+                bwrite_cp(0,3,4);
+                unit.move_cp(0x4D/4);
+                bwrite_cp(0,1,0);
+        }
+    }
 }

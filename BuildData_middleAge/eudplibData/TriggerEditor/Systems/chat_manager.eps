@@ -1,0 +1,24 @@
+var addr, ptrAddr, patternAddr, num;
+var pChat;//, chat
+
+const nums_ = PVariable();
+const patternAction_ = PVariable();
+const chatAction_ = PVariable();
+const pattern_len = 13; 
+
+//EUD register
+EUDRegisterObjectToNamespace("addr", addr);
+EUDRegisterObjectToNamespace("ptrAddr", ptrAddr);
+EUDRegisterObjectToNamespace("patternAddr", patternAddr);
+EUDRegisterObjectToNamespace("num", num);
+EUDRegisterObjectToNamespace("pChat", pChat);
+EUDRegisterObjectToNamespace("nums_", nums_);
+EUDRegisterObjectToNamespace("patternAction_", patternAction_);
+EUDRegisterObjectToNamespace("chatAction_", chatAction_);
+
+function run(){
+    if( patternAddr > 0 ){
+        num = parse(ptrAddr + pattern_len)[[0]];
+        pChat = patternAddr;
+    }
+}

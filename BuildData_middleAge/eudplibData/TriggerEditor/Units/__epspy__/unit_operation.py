@@ -151,125 +151,136 @@ def f_newUnitLoop():
         # (Line 84) break;
         if _t2(168):
             EUDBreak()
-            # (Line 85) }
-        # (Line 87) }
+            # (Line 85) case 156:
+        _t3 = EUDSwitchCase()
+        # (Line 86) skill.newCity(epd);
+        if _t3(156):
+            skill.f_newCity(epd)
+            # (Line 87) break;
+            EUDBreak()
+            # (Line 88) }
+        # (Line 90) }
         EUDEndSwitch()
-        # (Line 89) }
+        # (Line 92) }
 
-    # (Line 92) function getClickedUnitEPD(player : TrgPlayer){
+    # (Line 95) function getClickedUnitEPD(player : TrgPlayer){
 
 @EUDTypedFunc([TrgPlayer])
 def f_getClickedUnitEPD(player):
-    # (Line 93) const clickedArrayEPD = EUDVArray(8)();
+    # (Line 96) const clickedArrayEPD = EUDVArray(8)();
     clickedArrayEPD = EUDVArray(8)()
-    # (Line 94) const CLICKED_UNIT_OFFESET = EPD(0x6284E8); // 클릭한 유닛의 포인터 주소
+    # (Line 97) const CLICKED_UNIT_OFFESET = EPD(0x6284E8); // 클릭한 유닛의 포인터 주소
     CLICKED_UNIT_OFFESET = EPD(0x6284E8)
-    # (Line 95) if (!MemoryEPD(CLICKED_UNIT_OFFESET + 12*player, Exactly, clickedArrayEPD[player])
+    # (Line 98) if (!MemoryEPD(CLICKED_UNIT_OFFESET + 12*player, Exactly, clickedArrayEPD[player])
     _t1 = EUDIf()
-    # (Line 96) && !MemoryEPD(CLICKED_UNIT_OFFESET + 12*player, Exactly, 0)) {
+    # (Line 99) && !MemoryEPD(CLICKED_UNIT_OFFESET + 12*player, Exactly, 0)) {
     if _t1(EUDSCAnd()(MemoryEPD(CLICKED_UNIT_OFFESET + 12 * player, Exactly, clickedArrayEPD[player]), neg=True)(MemoryEPD(CLICKED_UNIT_OFFESET + 12 * player, Exactly, 0), neg=True)()):
-        # (Line 97) clickedArrayEPD[player] = cunitepdread_epd(CLICKED_UNIT_OFFESET + 12*player)[[1]];
+        # (Line 100) clickedArrayEPD[player] = cunitepdread_epd(CLICKED_UNIT_OFFESET + 12*player)[[1]];
         _ARRW(clickedArrayEPD, player) << (f_cunitepdread_epd(CLICKED_UNIT_OFFESET + 12 * player)[1])
-        # (Line 98) }
-        # (Line 99) return clickedArrayEPD[player];
+        # (Line 101) }
+        # (Line 102) return clickedArrayEPD[player];
     EUDEndIf()
     EUDReturn(clickedArrayEPD[player])
-    # (Line 100) }
-    # (Line 105) function logClickedUnit(player){
+    # (Line 103) }
+    # (Line 108) function logClickedUnit(player){
 
 @EUDFunc
 def f_logClickedUnit(player):
-    # (Line 107) const unit = CUnit(getClickedUnitEPD(player));
+    # (Line 110) const unit = CUnit(getClickedUnitEPD(player));
     unit = CUnit(f_getClickedUnitEPD(player))
-    # (Line 108) const orderId = bread_epd(unit + 0x4C/4, 1);
+    # (Line 111) const orderId = bread_epd(unit + 0x4C/4, 1);
     orderId = f_bread_epd(unit + 0x4C // 4, 1)
-    # (Line 109) const secondaryOrderId = unit.secondaryOrderID;
+    # (Line 112) const secondaryOrderId = unit.secondaryOrderID;
     secondaryOrderId = unit.secondaryOrderID
-    # (Line 110) const unitType = unit.unitType;
+    # (Line 113) const unitType = unit.unitType;
     unitType = unit.unitType
-    # (Line 111) setcurpl(unit + 0x98/4);
+    # (Line 114) setcurpl(unit + 0x98/4);
     f_setcurpl(unit + 0x98 // 4)
-    # (Line 112) const buildQ1 = wread_cp(0, 0);
+    # (Line 115) const buildQ1 = wread_cp(0, 0);
     buildQ1 = f_wread_cp(0, 0)
-    # (Line 113) const buildQ2 = wread_cp(0, 2);
+    # (Line 116) const buildQ2 = wread_cp(0, 2);
     buildQ2 = f_wread_cp(0, 2)
-    # (Line 114) const buildQ3 = wread_cp(1, 0);
+    # (Line 117) const buildQ3 = wread_cp(1, 0);
     buildQ3 = f_wread_cp(1, 0)
-    # (Line 115) const buildQ4 = wread_cp(1, 2);
+    # (Line 118) const buildQ4 = wread_cp(1, 2);
     buildQ4 = f_wread_cp(1, 2)
-    # (Line 116) const buildQ5 = wread_cp(2, 0);
+    # (Line 119) const buildQ5 = wread_cp(2, 0);
     buildQ5 = f_wread_cp(2, 0)
-    # (Line 117) setcurpl(unit + 0xEC/4);
+    # (Line 120) setcurpl(unit + 0xEC/4);
     f_setcurpl(unit + 0xEC // 4)
-    # (Line 118) const buildEPD = cunitepdread_cp(0)[[1]];
+    # (Line 121) const buildEPD = cunitepdread_cp(0)[[1]];
     buildEPD = f_cunitepdread_cp(0)[1]
-    # (Line 119) const buildingUnit = CUnit(buildEPD);
+    # (Line 122) const buildingUnit = CUnit(buildEPD);
     buildingUnit = CUnit(buildEPD)
-    # (Line 120) const remainingBuildTime = wread_epd(buildingUnit + 0xAC/4, 0);
+    # (Line 123) const remainingBuildTime = wread_epd(buildingUnit + 0xAC/4, 0);
     remainingBuildTime = f_wread_epd(buildingUnit + 0xAC // 4, 0)
-    # (Line 121) setcurpl(player);
+    # (Line 124) setcurpl(player);
     f_setcurpl(player)
-    # (Line 123) const s = StringBuffer(1024);
+    # (Line 126) const s = StringBuffer(1024);
     s = StringBuffer(1024)
-    # (Line 124) const txtptr = gettextptr();  // 채팅 포인터 값 가져오기 (채팅보존 출력용)
+    # (Line 127) const txtptr = gettextptr();  // 채팅 포인터 값 가져오기 (채팅보존 출력용)
     txtptr = f_gettextptr()
-    # (Line 125) s.insert(0);
+    # (Line 128) s.insert(0);
     s.insert(0)
-    # (Line 126) s.appendf("\x04최근 클릭한 유닛 \x02종류=:{} \x07오더=:{} \x07state=:{} \x07s오더=:{} \n", unitType, orderId, unit.orderState, secondaryOrderId);
+    # (Line 129) s.appendf("\x04최근 클릭한 유닛 \x02종류=:{} \x07오더=:{} \x07state=:{} \x07s오더=:{} \n", unitType, orderId, unit.orderState, secondaryOrderId);
     s.appendf("\x04최근 클릭한 유닛 \x02종류=:{} \x07오더=:{} \x07state=:{} \x07s오더=:{} \n", unitType, orderId, unit.orderState, secondaryOrderId)
-    # (Line 127) s.appendf("\x04 현재 position=:{} \x07 target position=:{} \n", unit.pos, unit.orderTargetPos);
+    # (Line 130) s.appendf("\x04 현재 position=:{} \x07 target position=:{} \n", unit.pos, unit.orderTargetPos);
     s.appendf("\x04 현재 position=:{} \x07 target position=:{} \n", unit.pos, unit.orderTargetPos)
-    # (Line 128) s.appendf("\x04 move position=:{} \n", unit.moveTargetPos);
+    # (Line 131) s.appendf("\x04 move position=:{} \n", unit.moveTargetPos);
     s.appendf("\x04 move position=:{} \n", unit.moveTargetPos)
-    # (Line 129) s.appendf("\x04빌드1=:{} \x07빌드2=:{} \x04빌드3=:{} \x04빌드4=:{} \x07빌드5=:{}\n", buildQ1, buildQ2, buildQ3, buildQ4, buildQ5);
+    # (Line 132) s.appendf("\x04빌드1=:{} \x07빌드2=:{} \x04빌드3=:{} \x04빌드4=:{} \x07빌드5=:{}\n", buildQ1, buildQ2, buildQ3, buildQ4, buildQ5);
     s.appendf("\x04빌드1=:{} \x07빌드2=:{} \x04빌드3=:{} \x04빌드4=:{} \x07빌드5=:{}\n", buildQ1, buildQ2, buildQ3, buildQ4, buildQ5)
-    # (Line 130) s.appendf("\x04ptr=:{}", remainingBuildTime);
+    # (Line 133) s.appendf("\x04ptr=:{}", remainingBuildTime);
     s.appendf("\x04ptr=:{}", remainingBuildTime)
-    # (Line 131) s.Display();
+    # (Line 134) s.Display();
     s.Display()
-    # (Line 132) dwwrite(0x640B58, txtptr);
+    # (Line 135) dwwrite(0x640B58, txtptr);
     f_dwwrite(0x640B58, txtptr)
-    # (Line 133) }
-    # (Line 135) function clickedBuildingCommand(cp){
+    # (Line 136) }
+    # (Line 138) function clickedBuildingCommand(cp){
 
 @EUDFunc
 def f_clickedBuildingCommand(cp):
-    # (Line 136) const clickedCUnit = CUnit(getClickedUnitEPD(cp));
+    # (Line 139) const clickedCUnit = CUnit(getClickedUnitEPD(cp));
     clickedCUnit = CUnit(f_getClickedUnitEPD(cp))
-    # (Line 137) if (!clickedCUnit) return;
+    # (Line 140) if (!clickedCUnit) return;
     if EUDIf()(clickedCUnit, neg=True):
         EUDReturn()
-        # (Line 138) logClickedUnit(cp);
+        # (Line 141) logClickedUnit(cp);
     EUDEndIf()
     f_logClickedUnit(cp)
-    # (Line 140) if(clickedCUnit.unitType == "수도"){
+    # (Line 143) if(clickedCUnit.unitType == "수도"){
     if EUDIf()(_ATTC(clickedCUnit, 'unitType') == "수도"):
-        # (Line 142) skill.useCapitalSkill(cp, clickedCUnit);
-        skill.f_useCapitalSkill(cp, clickedCUnit)
-        # (Line 143) }
+        # (Line 144) skill.buildFromCapital(cp, clickedCUnit);
+        skill.f_buildFromCapital(cp, clickedCUnit)
         # (Line 145) }
+        # (Line 147) }
     EUDEndIf()
-    # (Line 147) function playerLoop(){
+    # (Line 149) function playerLoop(){
 
 @EUDFunc
 def f_playerLoop():
-    # (Line 148) foreach(cp: EUDLoopPlayer(None)){
+    # (Line 150) foreach(cp: EUDLoopPlayer(None)){
     for cp in EUDLoopPlayer(None):
-        # (Line 149) setcurpl(cp);
+        # (Line 151) setcurpl(cp);
         f_setcurpl(cp)
-        # (Line 150) handleNexus(cp);
+        # (Line 152) handleNexus(cp);
         f_handleNexus(cp)
-        # (Line 151) clickedBuildingCommand(cp);
+        # (Line 153) clickedBuildingCommand(cp);
         f_clickedBuildingCommand(cp)
-        # (Line 152) }
-        # (Line 153) }
+        # (Line 154) }
+        # (Line 155) }
 
-    # (Line 155) function mainLoop(){
+    # (Line 157) function mainLoop(){
 
 @EUDFunc
 def f_mainLoop():
-    # (Line 156) newUnitLoop();
+    # (Line 158) newUnitLoop();
     f_newUnitLoop()
-    # (Line 157) playerLoop();
+    # (Line 159) playerLoop();
     f_playerLoop()
-    # (Line 159) }
+    # (Line 160) skill.run();
+    skill.f_run()
+    # (Line 161) skill.exit();
+    skill.f_exit()
+    # (Line 163) }

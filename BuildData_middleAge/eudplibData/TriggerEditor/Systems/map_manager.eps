@@ -1,4 +1,5 @@
-import .map_field as mf;
+import Systems.chat_manager as chatmgr;
+import Systems.map_field as mf;
 
 const TERR_TIMER = 400;
 const TERR_LENGTH = 30;
@@ -213,5 +214,6 @@ function playerLoop(){
 function mainLoop(){
     setSelectedCityName();
     //readTileInfo(epd);
+    chatmgr.run();
     playerLoop();
 }
