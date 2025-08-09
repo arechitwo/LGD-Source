@@ -1,0 +1,36 @@
+import Systems.map_manager as mmgr;
+import Units.unit_operation as unitop;
+
+
+function onPluginStart(){
+    //SetMemory(0x5124F0, SetTo, 21); //배속
+    randomize();
+
+    foreach(cp : EUDLoopPlayer("Human")) {//set computer player to Enemy
+        setcurpl(cp);
+        SetAllianceStatus((7), (0));
+        RunAIScript("Turn ON Shared Vision for Player 8");
+    }
+    mmgr.init();
+    //SetResources(13, 8, 10000, 0);
+    //SetResources(13, 8, 10000, 1);//디버그용 치트
+}
+
+
+function beforeTriggerExec(){
+    //fi.setSelectedCityName();//코쿤 이름 바꿔주는거.
+    //bt.betterBrain();
+    mmgr.mainLoop();
+    unitop.mainLoop();
+    // if( patternAddr > 0 ){
+    //     num = parse(ptrAddr + pattern_len)[[0]];
+    //     pChat = patternAddr;
+    // }
+
+    CreateUnit(1, 42, "생성_삭제_반복", 7);
+    RemoveUnit(42, 7);
+}
+
+function afterTriggerExec() {
+
+}
