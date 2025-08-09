@@ -12,3 +12,7 @@ BuildData_middleAge/backup/back4
 
 BuildData_middleAge/eudplibData/TriggerEditor/__pycache__/*
 BuildData_middleAge/eudplibData/TriggerEditor/__pycache__/*
+BuildData_middleAge/eudplibData/__pycache__/*
+BuildData_middleAge/eudplibData/TriggerEditor/Units/__epspy__/*
+BuildData_middleAge/eudplibData/TriggerEditor/Units/__pycache__/*
+BuildData_middleAge/eudplibData/DataEditor.py
