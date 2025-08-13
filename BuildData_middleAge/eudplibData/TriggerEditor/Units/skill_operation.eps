@@ -1,8 +1,11 @@
 import Systems.chat_manager as chatmgr;
+import Systems.map_field as mf;
+
 
 const cityMaps = EUDVArray(128, EUDArray)(py_eval("[EUDArray(128) for _ in range(128)]"));
 const tempUnitGroup = UnitGroup(1700);
 const smallCityGroup = UnitGroup(1700);
+const DEFENDER_PER_SHIELD = 500 * 256;
 
 
 function getBuildQNRange(epd){
@@ -27,11 +30,16 @@ function getBuildQNRange(epd){
             break;
         case $U("소도시"):
             buildQ = $U("소도시");
-            buildMaxRange = 15 * 32;
-            buildMinRange = 10 * 32;
+            buildMaxRange = 0;
+            buildMinRange = 0;
             break;
         case $U("시장"):
             buildQ = $U("시장");
+            buildMaxRange = 12 * 32;
+            buildMinRange = 5 * 32;
+            break;
+        case $U("교회"):
+            buildQ = $U("교회");
             buildMaxRange = 12 * 32;
             buildMinRange = 5 * 32;
             break;
@@ -40,6 +48,24 @@ function getBuildQNRange(epd){
     }
 
     return buildQ, buildMaxRange, buildMinRange;
+}
+
+function checkDistance(dx, dy, buildMaxRange, buildMinRange){
+
+    if (dx * dx + dy * dy > buildMaxRange * buildMaxRange) {
+        eprintf("건설 위치가 너무 멉니다.");
+        PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
+        return false;
+    }
+
+    if(dx * dx + dy * dy < buildMinRange * buildMinRange) {
+        eprintf("건설 위치가 너무 가깝습니다.");
+        PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
+        return false;
+    }
+
+    return true;
+
 }
 
 function resetBuildOrder(epd){
@@ -56,6 +82,7 @@ function newCity(unit : CUnit){
     const cityX = posX >> 6;
     const cityY = posY >> 6;
     cityMaps[cityX][cityY] = player + 1; // 도시 맵에 플레이어 번호 저장 (0은 빈 공간)
+    //simpleprint("도시가 생성되었습니다.",cityX, cityY, cityMaps[cityX][cityY]);
     smallCityGroup.add(unit);
 }
 
@@ -80,36 +107,61 @@ function buildFromCapital(player : TrgPlayer, unit : CUnit){
     const dy = posY - targetY;
     dx.iabs();
     dy.iabs();
-    if (dx * dx + dy * dy > buildMaxRange * buildMaxRange) {
-        eprintf("건설 위치가 너무 멉니다.");
-        PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
-        resetBuildOrder(unit);
-        return false;
-    }
 
-    if(dx * dx + dy * dy < buildMinRange * buildMinRange) {
-        eprintf("건설 위치가 너무 가깝습니다.");
-        PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
-        resetBuildOrder(unit);
-        return false;
+    if (buildQ == $U("항구") ){
+        const x1 = targetX >> 5;
+        const y1 = targetY >> 5;
+        const tileInfo = mf.tilesetInfo[y1*256+x1];
+        if(tileInfo != 1){
+            eprintf("항구는 바다에 지어야합니다.");
+            PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
+            resetBuildOrder(unit);
+            return false;    
+        }
+        if(!checkDistance(dx, dy, buildMaxRange, buildMinRange)){
+            resetBuildOrder(unit);
+            return false;
+        }
     }
-
-    if(buildQ == 170){//만약 도시일땐 도시끼리의 가까이 있는지도 봐야함
+    else if(buildQ == $U("소도시")){//만약 도시일땐 도시끼리의 가까이 있는지도 봐야함
         const cityX = targetX >> 6;
         const cityY = targetY >> 6;
-        for(var dx = 0; dx <= 6; dx++) {
-            for(var dy = 0; dy <= 6; dy++) {
-                if((dx + dy) <= 3 && (dx+dy) >= 9) continue; // 마름모(맨해튼 거리 3 이내만 검사)
-                const nx = cityX + dx - 3;
-                const ny = cityY + dy - 3;
-                if(nx >= 128 || ny >= 128) continue;
-                if(cityMaps[nx][ny] != 0) {
-                    eprintf("도시가 이미 존재합니다.");
-                    PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
-                    resetBuildOrder(unit);
-                    return false;
+        var hasNearbyCity = false;
+        for(var dx = 0; dx <= 20; dx++) {
+            for(var dy = 0; dy <= 20; dy++) {
+            const mx = dx - 10;
+            const my = dy - 10;
+            mx.iabs();
+            my.iabs();
+            var manhattan = mx + my;
+            const nx = cityX + dx - 10;
+            const ny = cityY + dy - 10;
+            if(nx >= 128 || ny >= 128) continue;
+            if(cityMaps[nx][ny] != 0) {
+                if(manhattan < 5) {
+                eprintf("도시가 너무 가까이 있습니다. 최소 10칸 이상 떨어져야 합니다.");
+                PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
+                resetBuildOrder(unit);
+                return false;
+                }
+                if(manhattan <= 10) {
+                hasNearbyCity = true;
                 }
             }
+            }
+        }
+        if(!hasNearbyCity) {
+            eprintf("도시가 너무 멀리 있습니다. 최대 20칸 이내에 도시가 있어야 합니다.");
+            PlayWAV("sound\\Protoss\\PROBE\\PPrErr00.WAV");
+            resetBuildOrder(unit);
+            return false;
+        }
+    }
+    else
+    {
+        if(!checkDistance(dx, dy, buildMaxRange, buildMinRange)){
+            resetBuildOrder(unit);
+            return false;
         }
     }
     
@@ -144,14 +196,76 @@ function buildFromCapital(player : TrgPlayer, unit : CUnit){
 
 }
 
-function transFormCity(){
-    const chat = chatmgr.chatAction_[0];
-    if(chat == 0) return;
+function handleSmallCities(){
+    foreach(unit : smallCityGroup.cploop) {
+        unit.move_cp(0x28/4);
+        const posX, posY = posread_cp(0);
+        foreach(dead : unit.dying) {
+            // 도시가 파괴되었을 때 처리
+            const posX, posY = posread_cp(0);
+            const cityX = posX >> 6;
+            const cityY = posY >> 6;
+            cityMaps[cityX][cityY] = 0; // 도시 맵에서 제거
+            eprintf("도시가 파괴되었습니다.");
+        }
+        setloc("Defender",posX,posY);
+        dilateloc("Defender",192,192);
+        // unit.move_cp(0x060/4);//쉴드
+        // const shield = dwread_cp(0);
+
+        unit.move_cp(0x4C/4);
+        const orderId = bread_cp(0, 1);
+        const player  = bread_cp(0, 0);
+        
+        unit.move_cp(0x8C/4);
+        const state = wread_cp(0, 0);
+
+        if(orderId == 19 && state == 0){ //전투 시작
+            // 야만인 생성
+            unit.set_cp(0x060/4);
+            while(Deaths(CurrentPlayer, AtLeast, DEFENDER_PER_SHIELD, 0)){
+                SetDeaths(CurrentPlayer, Subtract, DEFENDER_PER_SHIELD, 0);
+                CreateUnit(1, "주둔군", "Defender", player);
+            }
+            unit.move_cp(0x8C/4);
+            wwrite_cp(0, 0, 400);
+        }
+
+        if(orderId == 18 && state == 1){
+            // 주둔군 흡수
+           
+            //clear cache
+            RemoveUnitAt(All, "Map Revealer", "Defender", P9);
+        
+            unit.set_cp(0x060/4);
+            while(Bring(player, 0, 1, "주둔군","Defender")){
+                SetDeaths(CurrentPlayer, Add, DEFENDER_PER_SHIELD, 0);
+                RemoveUnitAt(1, "주둔군", "Defender", player);
+            }
+            unit.move_cp(0x8c/4);
+            wwrite_cp(0, 0, 0);
+        }
+
+        if(state > 1){
+            unit.move_cp(0x8C/4);
+            if(orderId == 19){
+                SetDeathsX(CurrentPlayer, SetTo, 400, 0, 0xFFFF);
+            }
+            else{
+                SetDeathsX(CurrentPlayer, Subtract, 1, 0, 0xFFFF);
+            }
+        }
+
+    }
 }
+
+        
+
+
 
 
 function run(){
-    transFormCity();
+    handleSmallCities();
     if(Deaths(0, Exactly, 3, 215)){
         CreateUnit(1, 40, "mouse1", 7);
     }

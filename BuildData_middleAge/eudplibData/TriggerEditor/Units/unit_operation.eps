@@ -60,7 +60,9 @@ function handleNexus(cp){
         CreateUnit(1, "수도", $L("Transpos1") + cp, cp);
         buildingNexus_[cp] = realNexus;
         nexusState_[cp] = 2; // 완료 상태로 변경
-        
+        const cityX = realNexus.posX >> 6;
+        const cityY = realNexus.posY >> 6;
+        skill.cityMaps[cityX][cityY] = cp + 1; // 도시 맵에 플레이어 번호 저장 (0은 빈 공간)
         // 가드 유닛 생성
         const guardNexusUnit = CUnit.from_next();
         CreateUnit(1, 29, $L("Transpos1") + cp, cp);
@@ -121,12 +123,17 @@ function logClickedUnit(player){
     const buildEPD = cunitepdread_cp(0)[[1]];
     const buildingUnit = CUnit(buildEPD);
     const remainingBuildTime = wread_epd(buildingUnit + 0xAC/4, 0);
+    
+    setcurpl(unit + 0x8C/4);
+    const userMemory = wread_cp(0, 0);
+    
+
     setcurpl(player);
 
     const s = StringBuffer(1024);
     const txtptr = gettextptr();  // 채팅 포인터 값 가져오기 (채팅보존 출력용)
     s.insert(0);
-    s.appendf("\x04최근 클릭한 유닛 \x02종류=:{} \x07오더=:{} \x07state=:{} \x07s오더=:{} \n", unitType, orderId, unit.orderState, secondaryOrderId);
+    s.appendf("\x04최근 클릭한 유닛 \x02종류=:{} \x07오더=:{} \x07state=:{} \x07s메모리=:{} \n", unitType, orderId, unit.orderState, userMemory);
     s.appendf("\x04 현재 position=:{} \x07 target position=:{} \n", unit.pos, unit.orderTargetPos);
     s.appendf("\x04 move position=:{} \n", unit.moveTargetPos);
     s.appendf("\x04빌드1=:{} \x07빌드2=:{} \x04빌드3=:{} \x04빌드4=:{} \x07빌드5=:{}\n", buildQ1, buildQ2, buildQ3, buildQ4, buildQ5);
