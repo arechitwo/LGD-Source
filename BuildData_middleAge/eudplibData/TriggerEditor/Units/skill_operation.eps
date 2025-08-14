@@ -20,7 +20,7 @@ function getBuildQNRange(epd){
             break;
         case $U("항구"):
             buildQ = $U("항구");
-            buildMaxRange = 32 *32;
+            buildMaxRange = 15 * 32;
             buildMinRange = 0;
             break;
         case $U("병영"):
@@ -206,7 +206,6 @@ function handleSmallCities(){
             const cityX = posX >> 6;
             const cityY = posY >> 6;
             cityMaps[cityX][cityY] = 0; // 도시 맵에서 제거
-            eprintf("도시가 파괴되었습니다.");
         }
         setloc("Defender",posX,posY);
         dilateloc("Defender",192,192);
