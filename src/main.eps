@@ -1,4 +1,5 @@
 import Systems.map_manager as mmgr;
+import Systems.init as sysInit;
 import Units.unit_operation as unitop;
 
 
@@ -13,9 +14,10 @@ function onPluginStart(){
     }
 
     mmgr.init();
-    setcurpl(0);
-    SetResources(13, 8, 10000, 0);
-    SetResources(13, 8, 10000, 1);//디버그용 치트
+    sysInit.InitPlayers();
+    // setcurpl(0);
+    // SetResources(13, 8, 10000, 0);
+    // SetResources(13, 8, 10000, 1);//디버그용 치트
 }
 
 

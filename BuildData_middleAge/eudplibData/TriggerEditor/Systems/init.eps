@@ -1,0 +1,23 @@
+/*
+ * init.eps
+ * Purpose: Initialize player state and starting resources.
+ * Responsibilities: Set death counters to start values on game start.
+ * Dependencies: constants.eps, state.eps
+ */
+import Systems.constants as constants;
+
+const custom_score = EPD(0x5822F4);
+function InitPlayers() {
+    foreach(player : EUDLoopPlayer()){
+        setcurpl(player);
+        SetResources(CurrentPlayer, SetTo, constants.GOLD, 0);
+        SetResources(CurrentPlayer, SetTo, constants.FOOD, 1);
+        SetMemoryEPD(custom_score + player, SetTo, constants.FAITH);
+    }
+    LeaderBoardScore(Custom, "명예");
+}
+
+/* HOW TO EXTEND
+ * - Add player-specific initializations like units or positions.
+ * - Load saved data for persistent campaigns.
+ */

@@ -7,6 +7,8 @@
 
 // --- Game timing and economy ---
 const SC_TICKS_PER_SECOND = 24;            // game ticks per second
+const RESOURCE_TIMER  = 192;
+
 const SC_START_GOLD        = 500;          // starting gold
 const SC_START_FOOD        = 200;          // starting food
 const SC_START_FAITH       = 100;          // starting faith
@@ -28,27 +30,18 @@ const SC_BARON_TO_COUNT_COUNTIES = 1;     // counties needed for promotion
 const SC_VICTORY_TERRITORY = 12;
 
 // --- Death counter mappings ---
-const DC_GOLD      = 1000;
-const DC_FOOD      = 1001;
-const DC_FAITH     = 1002;
-const DC_TICK      = 1003;
-const DC_RANK      = 1004;
-const DC_TERRITORY = 1005;
+const GOLD      = 1000;
+const FOOD      = 1000;
+const FAITH     = 100;
+const TICK      = 1003;
+const RANK      = 1004;
+const TERRITORY = 1005;
 
 // --- Building unit mappings ---
 const BUILD_FARM   = 2000;
 const BUILD_CHURCH = 2001;
 const BUILD_BARONY = 2002;
 const BUILD_COUNTY = 2003;
-
-// --- Player mappings ---
-const P1 = 1;
-const P2 = 2;
-const P3 = 3;
-const P4 = 4;
-const P5 = 5;
-const P6 = 6;
-const SC_PLAYERS = [P1, P2, P3, P4, P5, P6];
 
 /* CONFIG NOTES
  * - Tune starting resources and per-second gains for economic pacing.

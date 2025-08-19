@@ -1,0 +1,58 @@
+/*
+ * resource.eps
+ * Purpose: Manage tick accumulation and resource gains.
+ * Responsibilities: Increment tick counter and distribute gold/food/faith.
+ * Dependencies: constants.eps, state.eps, util.eps
+ */
+
+import Systems.constants as constants;
+
+const resourcebuildingList = 
+    list(
+        $U("수도"),
+        $U("방앗간"), 
+        $U("항구"), 
+        $U("병영"), 
+        $U("소도시"), 
+        $U("시장"), 
+        $U("교회")
+        );
+const resourceMineralUp = list(10, 3, 5, 1, 6, 10, 0);
+const resourceGasUP     = list( 5,10, 5, 0, 3,  0, 5);
+const resourceListLen   = py_len(resourcebuildingList);
+const complete_unit     = EPD(0x584DE4);
+
+function resourceLoop(){
+    static var resourceTimer = 0;
+    resourceTimer++;
+    if(resourceTimer <= constants.RESOURCE_TIMER) return; // 192 프레임마다 자원 생성
+    resourceTimer = 0;
+
+       
+    foreach(cp : EUDLoopPlayer()){
+        foreach(i : py_range(resourceListLen)){
+            const building = resourcebuildingList[i];
+            const mineral1  = resourceMineralUp[i];
+            const gas1      = resourceGasUP[i];
+            
+            if(Deaths(complete_unit + cp, AtLeast , 1, building)){
+                const buildCount = dwread_epd(complete_unit + cp + 12 * building);
+                SetResources(cp, Add, mineral1, 0);
+                SetResources(cp, Add, gas1, 1);
+            }
+        }
+    }
+}
+
+function TickAccumulate() {
+    // TODO: increment DC_TICK every trigger cycle
+}
+
+function ResourceLoop1s() {
+    // TODO: every second, add gold, convert farms to food, decay faith with church offset
+}
+
+/* HOW TO EXTEND
+ * - Add bonus resource sources or penalties.
+ * - Hook in upkeep systems or trade routes.
+ */

@@ -1,9 +1,9 @@
 import Units.skill_operation as skill;
+import Units.resource as resource;
 
 const buildingNexus_ = EUDVArray(8)();
 const nexusState_ = EUDArray(8); // 0: 없음, 1: 건설중, 2: 완료
 const guardNexus_ = EUDVArray(8)();
-const RESOURCE_TIMER  = 192;
 
 function newNexusFunc(epd){
     setcurpl(epd + 19);
@@ -148,41 +148,10 @@ function clickedBuildingCommand(cp){
     if (!clickedCUnit) return;
     logClickedUnit(cp);
     
-    if(clickedCUnit.unitType == "수도"){
-        skill.buildFromCapital(cp, clickedCUnit);
-    }
-    
-}
-
-function resourceLoop(){
-    static var resourceTimer = 0;
-    resourceTimer++;
-    if(resourceTimer <= RESOURCE_TIMER) return; // 100 프레임마다 자원 생성
-    resourceTimer = 0;
-    const completeUnit = EPD(0x584DE4);
-    const resourcebuildingList = 
-        list($U("방앗간"), 
-            $U("항구"), 
-            $U("병영"), 
-            $U("소도시"), 
-            $U("시장"), 
-            $U("교회"));
-    const resourceMineralUp    = list(3, 5, 1, 3, 10, 0);
-    const resourceGasUP        = list(10,5, 0, 5,  0, 5);
-       
-    foreach(cp : EUDLoopPlayer()){
-        foreach(i : py_range(6)){
-            const building = resourcebuildingList[i];
-            const mineral1  = resourceMineralUp[i];
-            const gas1      = resourceGasUP[i];
-
-            
-            if(Deaths(completeUnit + cp, AtLeast , 1, building)){
-                const buildCount = dwread_epd(completeUnit + cp + 12 * building);
-                SetResources(cp, Add, mineral1, 0);
-                SetResources(cp, Add, gas1, 1);
-            }
-        }
+    epdswitch(clickedCUnit + 25, 0xFF){
+        case $U("수도"):
+            skill.buildFromCapital(cp, clickedCUnit);
+            break;
     }
 }
 
@@ -197,7 +166,7 @@ function playerLoop(){
 function mainLoop(){
     newUnitLoop();
     playerLoop();
-    resourceLoop();
+    resource.resourceLoop();
 
     skill.run();
     skill.exit();
