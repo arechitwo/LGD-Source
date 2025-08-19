@@ -1,0 +1,37 @@
+/*
+ * main.eps
+ * Purpose: Entry point wiring all modules.
+ * Responsibilities: Include modules and trigger initialization on plugin start.
+ * Dependencies: src/*.eps
+ */
+
+#include "src/constants.eps"
+#include "src/state.eps"
+#include "src/util.eps"
+#include "src/init.eps"
+#include "src/resource.eps"
+#include "src/military.eps"
+#include "src/building.eps"
+#include "src/noble.eps"
+#include "src/exile.eps"
+#include "src/victory.eps"
+#include "src/ui.eps"
+
+function onPluginStart() {
+    HyperTriggersAll();
+    InitPlayers();
+    ShowBriefingOnce();
+    TickAccumulate();
+    ResourceLoop1s();
+    TerritoryRecalc1s();
+    PromoteBaronToCount_ByBaronies();
+    PromoteBaronToCount_ByCounty();
+    VictoryCheck();
+    BuildingLoop1s();
+    UILoop();
+}
+
+/* HOW TO EXTEND
+ * - Include additional modules like diplomacy or AI.
+ * - Hook extra loops or timers here.
+ */
