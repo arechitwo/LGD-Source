@@ -1,0 +1,23 @@
+/*
+ * resource.eps
+ * Purpose: Manage tick accumulation and resource gains.
+ * Responsibilities: Increment tick counter and distribute gold/food/faith.
+ * Dependencies: constants.eps, state.eps, util.eps
+ */
+
+import codex.constants as constants;
+import codex.state as state;
+import codex.util as util;
+
+function TickAccumulate() {
+    // TODO: increment DC_TICK every trigger cycle
+}
+
+function ResourceLoop1s() {
+    // TODO: every second, add gold, convert farms to food, decay faith with church offset
+}
+
+/* HOW TO EXTEND
+ * - Add bonus resource sources or penalties.
+ * - Hook in upkeep systems or trade routes.
+ */
