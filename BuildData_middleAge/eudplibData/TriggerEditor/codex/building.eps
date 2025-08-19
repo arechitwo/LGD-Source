@@ -1,0 +1,188 @@
+/*
+ * building.eps
+ * Purpose: Building request pipeline and management.
+ * Responsibilities: Process build requests, validate, place, and track buildings.
+ * Dependencies: constants.eps, state.eps, util.eps
+ */
+
+import codex.constants as constants;
+import codex.state as state;
+import codex.util as util;
+
+// === Public API ===
+function RequestBuild(p, buildingType, pos) {
+    // TODO: entry point for build requests
+}
+
+function CancelBuild(p, buildId) {
+    // TODO: cancel pending build
+}
+
+function BuildingLoop1s() {
+    // TODO: periodic build processing
+}
+
+// === Pipeline ===
+function ParseBuildInput(p) -> BuildIntent {
+    // TODO: parse input and return BuildIntent
+}
+
+function AcquireBuildLock(p) {
+    // TODO: prevent concurrent builds
+}
+
+function ReleaseBuildLock(p) {
+    // TODO: release build lock
+}
+
+function ValidateBuild(p, buildingType, pos) -> BuildCheckResult {
+    cost = GetBuildingCost(buildingType);
+
+    // Rank restriction
+    if (!CheckRankRestriction(p, buildingType)) {
+        SafeRollback(p);
+        OnBuildRejected(p, "rank");
+        return BuildCheckResult.FAIL_RANK;
+    }
+
+    // Resource check using death counters
+    if (
+        /* DC_GOLD for player p < cost.gold or
+           DC_FOOD for player p < cost.food or
+           DC_FAITH for player p < cost.faith */
+    ) {
+        SafeRollback(p);
+        OnBuildRejected(p, "resource");
+        return BuildCheckResult.FAIL_RESOURCE;
+    }
+
+    if (!CheckTerritoryLimit(p, buildingType)) {
+        SafeRollback(p);
+        OnBuildRejected(p, "territory");
+        return BuildCheckResult.FAIL_TERRITORY;
+    }
+
+    if (!CheckPlacement(p, buildingType, pos)) {
+        SafeRollback(p);
+        OnBuildRejected(p, "placement");
+        return BuildCheckResult.FAIL_PLACEMENT;
+    }
+
+    if (!CheckCooldown(p, buildingType)) {
+        SafeRollback(p);
+        OnBuildRejected(p, "cooldown");
+        return BuildCheckResult.FAIL_COOLDOWN;
+    }
+
+    return BuildCheckResult.OK;
+}
+
+function CheckRankRestriction(p, buildingType) {
+    // TODO: verify rank allows building
+}
+
+function CheckResourceCost(p, cost) {
+    // TODO: verify resources against cost
+}
+
+function CheckTerritoryLimit(p, buildingType) {
+    // TODO: ensure within territory limits
+}
+
+function CheckPlacement(p, buildingType, pos) {
+    // TODO: validate placement
+}
+
+function CheckCooldown(p, buildingType) {
+    // TODO: check build cooldown
+}
+
+function ReserveResources(p, buildingType) -> ReserveToken {
+    // TODO: reserve resources for building
+}
+
+function RollbackReserve(p, token) {
+    // TODO: rollback resource reservation
+}
+
+function PlaceBuilding(p, buildingType, pos) -> buildId {
+    unitID = buildingType; // map buildingType to unit constant
+    buildId = CreateUnit(unitID, pos, p);
+    if (buildId == 0) {
+        SafeRollback(p);
+        OnBuildRejected(p, "create_failed");
+        return 0;
+    }
+    return buildId;
+}
+
+function CommitBuild(p, buildId, token) {
+    // TODO: finalize build and consume reservation
+}
+
+function PostBuildEvents(p, buildingType, buildId) {
+    // TODO: trigger post-build hooks
+}
+
+// === Helpers ===
+function GetBuildingCost(buildingType) {
+    // TODO: return cost struct {gold, food, faith}
+}
+
+function GetBuildingLimit(buildingType) {
+    // TODO: return max allowed count
+}
+
+function GetTerritoryType(buildingType) {
+    // TODO: return territory type for counting
+}
+
+function StartBuildCooldown(p, buildingType) {
+    // TODO: start cooldown timer
+}
+
+function IsCooldownReady(p, buildingType) {
+    // TODO: check cooldown status
+}
+
+function OnBuildRejected(p, reason) {
+    // TODO: feedback to player
+}
+
+function SafeRollback(p) {
+    // TODO: safely revert any temporary state
+}
+
+function UpkeepTick() {
+    // TODO: handle building upkeep per tick
+}
+
+function OnBuildingDestroyed(buildingType, buildId) {
+    // TODO: handle cleanup on destruction
+}
+
+function OnChurchCountChanged(p) {
+    // TODO: respond to church count change
+}
+
+function OnFarmCountChanged(p) {
+    // TODO: respond to farm count change
+}
+
+function OnBaronyOrCountyChanged(p) {
+    // TODO: respond to barony or county count change
+}
+
+function BuildFeedback(p, result) {
+    // TODO: show build result feedback
+}
+
+function PushBuildLog(p, buildingType, result) {
+    // TODO: log build event
+}
+
+/* HOW TO EXTEND
+ * - Implement resource reservation and refund mechanics.
+ * - Add support for building upgrades or queues.
+ * - Integrate AI build requests.
+ */
