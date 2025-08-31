@@ -77,7 +77,7 @@ function handleNexus(cp){
 }
 
 function newUnitLoop(){
-    foreach(ptr, epd : EUDLoopNewUnit(20)){
+    foreach(ptr, epd : EUDLoopNewUnit()){
         epdswitch(epd + 25,0xFF){
             case $U("수도 건설중"):
                 newNexusFunc(epd);
